@@ -66,9 +66,9 @@ Skills load only when used, so the core rules stay small.
 ## Design
 | Skill | What it does | Rules | Status |
 |---|---|---|---|
-| `design-research` | Looks at what exists and shows 2–3 directions before building | design-rules | ✅ |
-| `design-system` | Sets colours, fonts, spacing and shapes once | design-rules | ✅ |
-| `design-review` | Screenshots + checklist, including accessibility and colour-blind checks | 9.7, design-rules | ✅ |
+| `design-research` | Looks at what exists and shows 2–3 directions before building | design-rules | ✅ in repo |
+| `design-system` | Sets colours, fonts, spacing and shapes once | design-rules | ✅ in repo |
+| `design-review` | Screenshots + checklist, including accessibility and colour-blind checks | 9.7, design-rules | ✅ in repo |
 | `figma-to-code` | Reads a Figma design and builds from its exact measurements | design-rules | 📝 |
 
 ## Portfolio and growth
