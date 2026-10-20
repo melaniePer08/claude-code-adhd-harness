@@ -74,7 +74,7 @@ Skills load only when used, so the core rules stay small.
 ## Portfolio and growth
 | Skill | What it does | Rules | Status |
 |---|---|---|---|
-| `project-showcase` | Bold, honest showcase page for finished projects | 8.10 | 📝 |
+| `project-showcase` | Bold, honest showcase page for finished projects | 8.10 | ✅ in repo (first version) |
 | `resources-finder` | Suggests 1–2 tools from `RESOURCES.md` for the current task | — | 📝 |
 | `improve-system` | Keeps `LESSONS.md` (model-aware); weekly finds repeated requests/mistakes and suggests improving existing skills first | 11 | 📝 |
 
