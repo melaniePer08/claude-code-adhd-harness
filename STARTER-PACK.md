@@ -38,7 +38,7 @@ Skills load only when used, so the core rules stay small.
 |---|---|---|---|
 | `first-run-setup` | Asks your settings (incl. how the form and summary pages should look), sets up git + `.env` files for a project, installs only the hooks and skills you need | settings, 7, 8.1 | 📝 |
 | `plan-first` | Writes the start card: plan + time + agents/models, one yes | 2.4 | 📝 |
-| `grill-me` | Asks you questions before a big build so it's right the first time (inspired by a public "grill me" skill, credited) | 5.4 | 📝 |
+| `grill-me` | Asks you questions before a big build so it's right the first time (inspired by [`grill-me`](https://github.com/mattpocock/skills) by Matt Pocock, MIT licence — credited) | 5.4 | 📝 |
 | `owner-form` | Builds the local question form | 1.8, 12 | 📝 |
 | `explain-command` | Explains a command part by part before you approve it | 2.1 | 📝 |
 | `explain-code` | Explains a file or feature in plain English | — | 📝 |
@@ -81,10 +81,11 @@ Skills load only when used, so the core rules stay small.
 **Total: 25 skills.**
 
 ## Optional extras (suggested, never installed without a yes)
-- **Claude Code `cleanupPeriodDays` setting** — built in; deletes old chat transcripts after that many days.
+- **Claude Code `cleanupPeriodDays` setting** — built in; how many days chat transcripts are kept (default 30). Lower it to free disk space.
 - **Windows Storage Sense** — built in; clears temp files and the recycle bin on a schedule.
-- **`npkill`** — finds and deletes old `node_modules` folders. (to verify)
-- **Anthropic's official skills** — github.com/anthropics/skills (e.g. `skill-creator`). (to verify)
-- **`RESOURCES.md`** — tables of good GitHub repos by topic (design, security, better code, managing code, design tools → site), refreshed weekly by a GitHub Action.
+- **[`npkill`](https://github.com/voidcosmos/npkill)** (MIT) — lists every `node_modules` folder with its size so you can delete old ones. Code is still updated, but the last official release is from 2024.
+- **[Anthropic's official skills](https://github.com/anthropics/skills)** — e.g. `skill-creator`, `frontend-design`, `webapp-testing`. Mixed licences: many are Apache-2.0, the document skills are source-available — check each one.
+- **Package managers' built-in "minimum release age"** — npm, pnpm, Yarn and Bun can all refuse brand-new versions themselves (see rule 6.4a).
+- **[`RESOURCES.md`](RESOURCES.md)** — tables of good GitHub repos by topic.
 
-> Items marked "to verify" are checked before publishing.
+> Checked on 2026-10-21 against official docs and the GitHub API.

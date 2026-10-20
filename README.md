@@ -65,7 +65,11 @@ rules/                one detailed file per topic, read only when needed
   01-communication · 02-permissions · 03-agents · 04-computer
   05-tokens · 06-security · 07-secrets · 08-git · 09-code
   10-notifications · 11-learning · 12-question-form
+rules/design-rules.md visual rules, read only for interface work
+skills/               step-by-step routines that load only when used
+tools/                screenshot tool + read-only Figma reader (no packages needed)
 STARTER-PACK.md       every hook and skill: what it does, and its status
+RESOURCES.md          good tools by topic — design, security, code, Figma, Claude Code
 DISCLAIMERS.md        please read before installing
 ```
 
@@ -78,10 +82,12 @@ This project is being built in the open. Only what's marked ✅ exists today.
 | Core rules + 12 detailed rule files | ✅ first draft |
 | Settings file | ✅ |
 | Starter pack list (hooks + skills) | ✅ |
-| Design rules | 📝 planned |
+| Design rules | ✅ |
+| Skills: `design-research`, `design-system`, `design-review`, `project-showcase` | ✅ 4 of 25 |
+| Tools: screenshot tool (`shot.mjs`), Figma reader (`figma.mjs`) | ✅ |
+| `RESOURCES.md` — tables of useful repos by topic | ✅ (weekly auto-refresh 📝 planned) |
+| Other 21 skills | 📝 planned |
 | Hooks (cleaned for public use) | 📝 planned |
-| 25 skills | 📝 planned — 3 design skills exist and are being cleaned |
-| `RESOURCES.md` — tables of useful repos, refreshed weekly | 📝 planned |
 | One-step install (`first-run-setup`) | 📝 planned |
 
 <details>
@@ -94,6 +100,9 @@ When it's ready, a setup skill will:
 1. ask a few questions — your computer's memory, your Claude plan, how pages should look,
 2. check which hooks and skills you already have,
 3. explain each piece, and install only what you say yes to.
+
+Everything goes into `~/.claude/harness/` — **not** `~/.claude/rules/`, because Claude Code
+loads that folder automatically in every session, which would cost tokens all the time.
 
 Until then, you can read the rules and copy what you like into your own `CLAUDE.md`.
 </details>

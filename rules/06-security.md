@@ -35,6 +35,16 @@
 **6.4a Never install a brand-new version. Wait `PACKAGE_WAIT_DAYS` (default 7) after it was released.** (hook: dependency check)
 - Before installing or updating any package, check its release date. Too new → use the previous version, and say so.
 - The `package-check` skill and the dependency hook do this automatically before every install, so it doesn't depend on Claude remembering.
+- **Even better: turn on the package manager's own built-in wait** (with the user's yes — it's a config change). Careful, each one uses a different unit:
+
+  | Package manager | Setting | Unit | 7 days = | Since |
+  |---|---|---|---|---|
+  | npm | `min-release-age` in `.npmrc` | days | `7` | npm 11.10 |
+  | pnpm | `minimumReleaseAge` | minutes | `10080` | pnpm 10.16 |
+  | Yarn (Berry) | `npmMinimalAgeGate` in `.yarnrc.yml` | duration | `7d` | Yarn 4.10 |
+  | Bun | `install.minimumReleaseAge` in `bunfig.toml` | seconds | `604800` | Bun 1.3 |
+
+  Check the installed version supports it before relying on it (`npm -v`, `pnpm -v`…).
 - Only exception: a fix for a security hole that is being attacked right now — then explain the risk both ways and ask the user.
 - Why: hijacked or broken releases are usually caught by other people within days. Waiting a week lets them find it first.
 - Example: "`axios` 1.8.0 came out 2 days ago — too new. Installing 1.7.9 (released 5 weeks ago) instead. I'll suggest 1.8.0 again next week."

@@ -1,8 +1,13 @@
 # Claude Code ADHD Harness — Core Rules
 
 Short on purpose: this file is loaded in every session. Each line points to a
-detailed file in `rules/` — **read that file when the task touches its topic**,
-not before. Your personal values live in `harness-settings.md`.
+detailed file in the harness's `rules/` folder — **read that file when the task
+touches its topic**, not before. Your personal values live in `harness-settings.md`.
+
+Installed location: `~/.claude/harness/` (so the detail files are in
+`~/.claude/harness/rules/`). Never move them to `~/.claude/rules/` and never link
+them with `@` imports — Claude Code loads both automatically in every session,
+which would undo the token savings.
 
 (hook) = a hook enforces or triggers this rule, so it doesn't rely on memory.
 
