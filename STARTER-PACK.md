@@ -37,10 +37,10 @@ Skills load only when used, so the core rules stay small.
 | Skill | What it does | Rules | Status |
 |---|---|---|---|
 | `first-run-setup` | Asks your settings (incl. how the form and summary pages should look), sets up git + `.env` files for a project, installs only the hooks and skills you need | settings, 7, 8.1 | 📝 |
-| `plan-first` | Writes the start card: plan + time + agents/models, one yes | 2.4 | 📝 |
+| `plan-first` | Writes the start card: plan + time + agents/models, one yes | 2.4 | ✅ first version |
 | `grill-me` | Asks you questions before a big build so it's right the first time (inspired by [`grill-me`](https://github.com/mattpocock/skills) by Matt Pocock, MIT licence — credited) | 5.4 | 📝 |
-| `owner-form` | Builds the local question form | 1.8, 12 | 📝 |
-| `explain-command` | Explains a command part by part before you approve it | 2.1 | 📝 |
+| `owner-form` | Builds the local question form | 1.8, 12 | ✅ first version |
+| `explain-command` | Explains a command part by part before you approve it | 2.1 | ✅ first version |
 | `explain-code` | Explains a file or feature in plain English | — | 📝 |
 | `write-up` | Task reports (terminal or page), handoff notes, daily summary, `DEVLOG.md` entries | 1.7, 5.7, 8.9, 11.3 | 📝 |
 

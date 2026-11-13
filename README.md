@@ -83,10 +83,10 @@ This project is being built in the open. Only what's marked ✅ exists today.
 | Settings file | ✅ |
 | Starter pack list (hooks + skills) | ✅ |
 | Design rules | ✅ |
-| Skills: `design-research`, `design-system`, `design-review`, `project-showcase` | ✅ 4 of 25 |
+| Skills: `design-research`, `design-system`, `design-review`, `project-showcase`, `plan-first`, `explain-command`, `owner-form` | ✅ 7 of 25 |
 | Tools: screenshot tool (`shot.mjs`), Figma reader (`figma.mjs`) | ✅ |
 | `RESOURCES.md` — tables of useful repos by topic | ✅ (weekly auto-refresh 📝 planned) |
-| Other 21 skills | 📝 planned |
+| Other 18 skills | 📝 planned |
 | Hooks (cleaned for public use) | 📝 planned |
 | One-step install (`first-run-setup`) | 📝 planned |
 
