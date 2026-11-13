@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questions for you</title>
+<style>
+  :root {
+    --bg: #FAF8F5; --surface: #FFFFFF; --text: #2B2622; --muted: #5F574E; --border: #CFC6BA;
+    --accent: #B4532A; --accent-text: #FFFFFF; --ok: #2F6B3E; --radius: 10px; --s1: 8px; --s2: 16px; --s3: 24px; --s4: 40px;
+  }
+  :root[data-theme="dark"] { --bg: #1C1917; --surface: #262220; --text: #EDE8E2; --muted: #B3A99D; --border: #5A5148; --accent: #E58A5C; --accent-text: #1C1917; --ok: #7CC38D; }
+  @media (prefers-color-scheme: dark) { :root[data-theme="auto"] { --bg: #1C1917; --surface: #262220; --text: #EDE8E2; --muted: #B3A99D; --border: #5A5148; --accent: #E58A5C; --accent-text: #1C1917; --ok: #7CC38D; } }
+  :root[data-size="large"] { font-size: 112.5%; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 1rem/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: var(--s2); padding-bottom: 120px; }
+  h1 { font-size: 1.6rem; line-height: 1.25; margin: var(--s3) 0 var(--s1); }
+  h2 { font-size: 1.2rem; margin: var(--s4) 0 var(--s2); }
+  p { max-width: 65ch; margin: 0 0 var(--s1); }
+  .muted { color: var(--muted); }
+  .bar { position: sticky; top: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: var(--s1) var(--s2); z-index: 5; }
+  .bar-inner { max-width: 760px; margin: 0 auto; display: flex; gap: var(--s2); align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--s2); margin: 0 0 var(--s2); }
+  .card.blocking { border-left: 4px solid var(--accent); }
+  .where { font-weight: 700; margin: 0 0 var(--s1); }
+  .tag { display: inline-block; font-size: .8rem; border: 1px solid var(--border); border-radius: 999px; padding: 0 var(--s1); margin-left: var(--s1); color: var(--muted); font-weight: 400; }
+  img.shot { display: block; max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: var(--radius); margin: var(--s1) 0; cursor: zoom-in; }
+  .opts { display: flex; flex-direction: column; gap: var(--s1); margin: var(--s2) 0; }
+  button, textarea { font: inherit; color: inherit; }
+  .opt { text-align: left; background: var(--bg); border: 2px solid var(--border); border-radius: var(--radius); padding: 12px var(--s2); min-height: 44px; cursor: pointer; }
+  .opt:hover { border-color: var(--accent); }
+  .opt:active { transform: translateY(1px); }
+  .opt[aria-pressed="true"] { border-color: var(--accent); background: var(--surface); box-shadow: inset 0 0 0 1px var(--accent); }
+  .opt .effect { display: block; color: var(--muted); font-size: .9rem; }
+  .rec { font-size: .8rem; font-weight: 700; color: var(--ok); margin-left: var(--s1); }
+  textarea { width: 100%; min-height: 84px; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); resize: vertical; }
+  button:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .primary { background: var(--accent); color: var(--accent-text); border: 0; border-radius: var(--radius); padding: 12px var(--s3); font-weight: 700; min-height: 44px; cursor: pointer; }
+  .primary:hover { filter: brightness(1.08); }
+  .primary:active { transform: translateY(1px); }
+  .primary:disabled { opacity: .6; cursor: not-allowed; }
+  .state { margin: var(--s3) 0; padding: var(--s2); border: 1px dashed var(--border); border-radius: var(--radius); }
+  .status { font-size: .9rem; }
+  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: none; align-items: center; justify-content: center; padding: var(--s2); z-index: 10; cursor: zoom-out; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 100%; }
+  ul.decided { padding-left: 1.2rem; margin: 0; }
+  figure.card { margin-left: 0; margin-right: 0; }
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-inner">
+  <strong id="progress">Loading…</strong>
+  <span class="status muted" id="status" role="status" aria-live="polite"></span>
+</div></div>
+<main id="root"></main>
+<div class="lightbox" id="lightbox" role="dialog" aria-label="Enlarged picture"><img alt=""></div>
+<script>
+const root = document.getElementById('root');
+const state = { answers: {}, extra: '', submitted: false };
+let data = { questions: [] }, saveTimer = null;
+
+function el(tag, props = {}, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) { if (k === 'class') n.className = v; else n.setAttribute(k, v); }
+  for (const k of kids.flat()) if (k != null) n.append(k.nodeType ? k : document.createTextNode(k));
+  return n;
+}
+const answered = (q) => { const a = state.answers[q.id]; return !!(a && (a.choice || (a.text && a.text.trim()))); };
+const status = (t) => { document.getElementById('status').textContent = t; };
+
+function save() {
+  clearTimeout(saveTimer);
+  status('Saving…');
+  saveTimer = setTimeout(async () => {
+    try {
+      const r = await fetch('/api/answers', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(state) });
+      status(r.ok ? 'Saved ✓' : 'Could not save — is the form still running?');
+    } catch { status('Could not save — is the form still running?'); }
+  }, 300);
+}
+
+function progress() {
+  const done = data.questions.filter(answered).length;
+  document.getElementById('progress').textContent = done + ' of ' + data.questions.length + ' answered';
+  const list = document.getElementById('decided');
+  if (list) list.replaceChildren(...data.questions.map((q) => el('li', {}, (answered(q) ? '✓ ' : '○ ') + q.where)));
+}
+
+function pic(file, alt) {
+  const img = el('img', { class: 'shot', src: '/images/' + encodeURIComponent(file), alt: alt || '', loading: 'lazy' });
+  img.addEventListener('click', () => { const lb = document.getElementById('lightbox'); const li = lb.querySelector('img'); li.src = img.src; li.alt = alt || ''; lb.classList.add('open'); });
+  img.addEventListener('error', () => img.replaceWith(el('p', { class: 'muted' }, '(picture missing: ' + file + ')')));
+  return img;
+}
+
+function card(q) {
+  const a = state.answers[q.id] || (state.answers[q.id] = { choice: '', text: '' });
+  const opts = [...(q.options || []),
+    { label: "I don't understand this question", effect: 'I will explain it more simply.' },
+    { label: 'Not sure, you decide', effect: 'I choose and tell you what I chose.' }];
+  const box = el('div', { class: 'opts', role: 'group', 'aria-label': 'Options' });
+  for (const o of opts) {
+    const b = el('button', { class: 'opt', type: 'button', 'aria-pressed': String(a.choice === o.label) },
+      o.label, o.recommended ? el('span', { class: 'rec' }, 'Recommended') : null, o.effect ? el('span', { class: 'effect' }, o.effect) : null);
+    b.addEventListener('click', () => {
+      a.choice = a.choice === o.label ? '' : o.label;
+      for (const x of box.children) x.setAttribute('aria-pressed', String(x === b && a.choice !== ''));
+      progress(); save();
+    });
+    box.append(b);
+  }
+  const ta = el('textarea', { 'aria-label': 'Your own words (any language)', placeholder: 'Anything to add? Any language, any style is fine.' });
+  ta.value = a.text || '';
+  ta.addEventListener('input', () => { a.text = ta.value; progress(); save(); });
+  return el('section', { class: 'card' + (q.blocking ? ' blocking' : ''), id: 'q-' + q.id },
+    el('p', { class: 'where' }, q.where, q.blocking ? el('span', { class: 'tag' }, 'blocks my work') : null),
+    (q.images || []).map((f) => pic(f, 'Picture for: ' + q.where)),
+    el('p', {}, el('strong', {}, 'Why I am asking: '), q.why),
+    q.question ? el('p', {}, q.question) : null, box, ta);
+}
+
+function markDone(btn) { btn.disabled = true; btn.textContent = 'Done ✓ — now tell Claude: answered'; }
+
+function render() {
+  root.replaceChildren();
+  const s = data.settings || {};
+  const html = document.documentElement;
+  html.dataset.theme = s.theme === 'dark' ? 'dark' : s.theme === 'light' ? 'light' : 'auto';
+  if (s.textSize === 'large') html.dataset.size = 'large';
+  if (s.accent && /^#[0-9a-f]{6}$/i.test(s.accent)) html.style.setProperty('--accent', s.accent);
+  document.title = data.title || 'Questions for you';
+  root.append(el('h1', {}, data.title || 'Questions for you'), data.intro ? el('p', { class: 'muted' }, data.intro) : null);
+  const qs = [...data.questions].sort((x, y) => (y.blocking ? 1 : 0) - (x.blocking ? 1 : 0));
+  const groups = [...new Set(qs.map((q) => q.group || 'General'))];
+  for (const g of groups) { root.append(el('h2', {}, g)); qs.filter((q) => (q.group || 'General') === g).forEach((q) => root.append(card(q))); }
+  if ((data.looks || []).length) {
+    root.append(el('h2', {}, 'How it looks'));
+    for (const l of data.looks) root.append(el('figure', { class: 'card' }, pic(l.image, l.caption), el('figcaption', { class: 'muted' }, l.caption)));
+  }
+  root.append(el('h2', {}, 'Decided and still open'), el('div', { class: 'card' }, el('ul', { class: 'decided', id: 'decided' })));
+  const extra = el('textarea', { 'aria-label': 'Anything else', placeholder: 'Anything else, or anything I forgot to mention?' });
+  extra.value = state.extra || '';
+  extra.addEventListener('input', () => { state.extra = extra.value; save(); });
+  root.append(el('h2', {}, 'Anything else, or anything I forgot to mention?'), extra);
+  const done = el('button', { class: 'primary', type: 'button' }, "I'm done");
+  done.addEventListener('click', () => { state.submitted = true; save(); markDone(done); });
+  root.append(el('div', { class: 'state' }, el('p', {}, 'Your answers save by themselves while you type. Press the button when you are finished, then tell Claude: "answered".'), done));
+  progress();
+}
+
+document.getElementById('lightbox').addEventListener('click', (e) => e.currentTarget.classList.remove('open'));
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('open'); });
+
+(async () => {
+  try {
+    const [q, a] = await Promise.all([fetch('/api/questions').then((r) => r.json()), fetch('/api/answers').then((r) => r.json())]);
+    data = q; state.answers = a.answers || {}; state.extra = a.extra || ''; // reopening starts "not done" again
+    render();
+  } catch { root.replaceChildren(el('div', { class: 'state' }, 'Could not load the questions. Is the form still running? Ask Claude to start it again.')); }
+})();
+</script>
+</body>
+</html>

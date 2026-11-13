@@ -1,0 +1,34 @@
+{
+  "title": "Questions about the shop",
+  "intro": "Answer what you can. Skipped questions are fine — I will pick sensible defaults and tell you.",
+  "settings": { "theme": "auto", "textSize": "normal", "accent": "#B4532A" },
+  "questions": [
+    {
+      "id": "pay-button",
+      "group": "Checkout",
+      "where": "Checkout › Pay button",
+      "blocking": true,
+      "images": ["pay-button.png"],
+      "why": "Some shops show the total on the button so nobody is surprised at the end.",
+      "question": "Should the button show the total?",
+      "options": [
+        { "label": "Show the total", "effect": "Button reads \"Pay €42.00\".", "recommended": true },
+        { "label": "Just \"Pay\"", "effect": "Button always says \"Pay\"." }
+      ]
+    },
+    {
+      "id": "footer-links",
+      "group": "Whole project",
+      "where": "Whole project › Footer",
+      "why": "A footer with legal links is needed before the shop goes live.",
+      "question": "Which links should the footer have?",
+      "options": [
+        { "label": "Privacy + Terms", "effect": "Two links.", "recommended": true },
+        { "label": "Privacy + Terms + Contact", "effect": "Three links." }
+      ]
+    }
+  ],
+  "looks": [
+    { "image": "home-desktop.png", "caption": "Home page on desktop — new header added." }
+  ]
+}
