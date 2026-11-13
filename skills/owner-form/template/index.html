@@ -131,7 +131,8 @@ function render() {
   if (s.textSize === 'large') html.dataset.size = 'large';
   if (s.accent && /^#[0-9a-f]{6}$/i.test(s.accent)) html.style.setProperty('--accent', s.accent);
   document.title = data.title || 'Questions for you';
-  root.append(el('h1', {}, data.title || 'Questions for you'), data.intro ? el('p', { class: 'muted' }, data.intro) : null);
+  root.append(el('h1', {}, data.title || 'Questions for you'));
+  if (data.intro) root.append(el('p', { class: 'muted' }, data.intro));
   const qs = [...data.questions].sort((x, y) => (y.blocking ? 1 : 0) - (x.blocking ? 1 : 0));
   const groups = [...new Set(qs.map((q) => q.group || 'General'))];
   for (const g of groups) { root.append(el('h2', {}, g)); qs.filter((q) => (q.group || 'General') === g).forEach((q) => root.append(card(q))); }

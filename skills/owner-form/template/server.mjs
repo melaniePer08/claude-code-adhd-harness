@@ -24,7 +24,8 @@ const send = (res, code, type, body) => {
   });
   res.end(body);
 };
-const readJson = (f, fallback) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return fallback; } };
+// Strips a leading BOM (Windows editors and PowerShell add one) before parsing.
+const readJson = (f, fallback) => { try { return JSON.parse(fs.readFileSync(f, 'utf8').replace(/^﻿/, '')); } catch { return fallback; } };
 
 // Only accept requests addressed to us (blocks DNS rebinding) and, for writes, from our own page.
 const hostOk = (req) => { const h = (req.headers.host || '').toLowerCase(); return h === `127.0.0.1:${PORT}` || h === `localhost:${PORT}`; };

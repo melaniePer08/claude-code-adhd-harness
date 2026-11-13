@@ -29,7 +29,7 @@ You only write `questions.json` and the images. Do not rewrite the server or the
 
 ## Step 2 — Write `scripts/owner-form/questions.json`
 
-Copy the shape of `questions.example.json`. Fields per question:
+Copy the shape of `questions.example.json`. Write it as plain UTF-8 JSON with the file-write tool (not through PowerShell redirection, which can re-encode characters like "—" or "€"). Fields per question:
 
 | Field | Meaning |
 |---|---|
