@@ -78,6 +78,11 @@ if (now - (Number(weekly.improve) || 0) > WEEK_MS) {
   reminders.push('📅 Weekly: offer the `improve-system` review (work logs + mistakes-log.md + LESSONS.md). Never change a skill without a yes.');
   weekly.improve = now;
 }
+const MONTH_MS = 30 * 24 * 60 * 60 * 1000;
+if (fs.existsSync(path.join(HARNESS_DIR, 'RESOURCES.md')) && now - (Number(weekly.resources) || 0) > MONTH_MS) {
+  reminders.push('📅 Monthly: offer to refresh RESOURCES.md star counts with `node ~/.claude/tools/refresh-resources.mjs` (a dry run shows the changes first; `--apply` writes them). It only reads public GitHub data.');
+  weekly.resources = now;
+}
 if (reminders.length) {
   saveState('weekly', weekly, 'start');
   parts.push(`${reminders.join('\n')}\nMention these once, briefly, after the user's first request is under way — don't interrupt a task for them.`);

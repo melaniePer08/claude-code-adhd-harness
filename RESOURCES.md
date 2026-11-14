@@ -5,7 +5,7 @@ Claude reads this when a task fits a topic and suggests 1–2 options (`resource
 goes through `package-check`: real name, age ≥ `PACKAGE_WAIT_DAYS`, licence OK.
 
 ⭐ = stars on GitHub · 🕒 = last update · Numbers from the GitHub API on **2026-10-21**.
-A weekly automatic refresh is planned, so dead projects become easy to spot.
+Refresh the numbers any time with `node tools/refresh-resources.mjs` (a dry run until you add `--apply`); it also warns about archived or abandoned projects.
 
 > **Licence notes:** ⚠️ *copyleft* licences (GPL, AGPL, LGPL, CC-BY-SA) can add duties when you
 > copy or ship their code — fine for tools you only *run*, check first before copying their code (rule 6.6).
