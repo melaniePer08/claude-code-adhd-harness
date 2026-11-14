@@ -1,0 +1,42 @@
+# Secrets — never commit these (the harness only ever reads .env.example)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+credentials*.json
+service-account*.json
+
+# Dependencies and build output
+node_modules/
+dist/
+build/
+.next/
+coverage/
+
+# Things the harness tools create while working
+.shots/
+docs/owner-answers.json
+docs/reports/
+mistakes-log.md
+LESSONS.local.md
+map-check-A.md
+map-check-B.md
+docs/merge-check.md
+docs/verify-report.md
+
+# Backups and logs
+*.bak
+*.bak-*
+*.log
+*.tmp
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
