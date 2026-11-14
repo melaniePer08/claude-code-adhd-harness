@@ -4,6 +4,7 @@
 - Why: you should make a real decision, not click "yes" on trust.
 - Example: `git push origin main` → "`git push` uploads your saved commits. `origin` is your GitHub repo. `main` is the branch. Nothing is deleted."
 - Explain every flag (`-rf`, `--force`, `--hard`), every exact path, what gets created, changed, deleted or sent off the computer, and what can't be undone. Joined commands (`&&`, `;`, `|`) are explained piece by piece.
+- Multi-line commands, heredocs and inline scripts (`node -e`, `python -c`) are explained too — and for code changes use the Edit/Write tool instead, so the user reviews a diff, not a script. (hook: `explain-gate` holds these until they are explained)
 
 **2.2 Free to do (no asking):**
 - Read and search files in the project

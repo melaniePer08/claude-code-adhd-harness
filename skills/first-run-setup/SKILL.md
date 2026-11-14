@@ -53,7 +53,9 @@ Present a short list, each with **what it is, what it does, whether it's needed*
 
 - **Rules** (always): copy `CLAUDE.md`, `rules/`, `harness-settings.md`, `RESOURCES.md` into `~/.claude/harness/`. Then tell the user: *add one line to their `~/.claude/CLAUDE.md`, or project `CLAUDE.md`, pointing at the harness core rules* — and show the exact line. Never overwrite their file.
 - **Hooks** — recommend the safety set first: `secret-scan`, `protect-secret-files`, `block-dangerous`, `explain-gate`, `commit-guard`. Then optional: `ram-check`, `finish-check`, `auto-push`, `review-gate`, `dep-check`, `auto-format`, `notify`, `session-start`, `session-log`, `command-log`, `mistake-log`, `rules-refresh`, `github-check`, `require-remote`, `protect-config`. Read `hooks/README.md` for the one-line meaning of each.
-- **Skills** — the starter pack, by group (see `STARTER-PACK.md`). Recommend the ones the user's projects need: design skills only if they build interfaces; `owner-form` only if they like forms; etc. Never install all 24 "just in case" — unused skills only add noise.
+- **Skills** — the starter pack, by group (see `STARTER-PACK.md`).
+  - **Always recommend to everyone, even complete beginners** (the owner asked for these to be there from day one): the security skills `secure-code`, `security-check`, `package-check`, and the design skills `design-research`, `design-system`, `design-review`. Say why in one line each; the user can still say no.
+  - **The rest by need:** `owner-form` only if they like forms, `figma-to-code` only if they use Figma, and so on. Never install all 25 "just in case" — unused skills only add noise.
 - **Tools** — `shot.mjs` if they build interfaces; `figma.mjs` only if they use Figma (needs a token they create themselves).
 
 For each group, **ask for a yes** before doing it (rule 2.3). Explain the commands part by part (`explain-command`) — e.g. copying files: "`Copy-Item skills\debug ~\.claude\skills\debug -Recurse` copies the `debug` folder into your Claude skills folder; nothing is deleted; undo by deleting that folder."

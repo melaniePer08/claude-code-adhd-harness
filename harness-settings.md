@@ -10,6 +10,7 @@ If a value is empty, Claude asks you before the first task (the `first-run-setup
 | `STOP_RAM_GB` | 3 | Stop heavy work if free memory drops below this |
 | `MAX_AGENTS` | 3 | Most helper agents normally suggested for one task |
 | `PUSH_EVERY` | 5 | Push to GitHub automatically after this many unpushed commits (a small `fix:` commit is pushed right away) |
+| `EXPLAIN_SCRIPTS` | yes | Also hold multi-line commands, heredocs and inline scripts (`node -e`, `python -c`) until Claude has explained them, and prefer the Edit tool for code changes. `no` = only risky commands are held |
 | `PLAN_FIRST` | yes | Show the start card and wait for a yes (strongly recommended) |
 | `PACKAGE_WAIT_DAYS` | 7 | Never install a package version newer than this many days |
 | `FORM_AFTER` | 5 | More questions than this → offer the question form |

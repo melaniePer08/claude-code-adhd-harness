@@ -17,7 +17,7 @@
 
 import crypto from 'node:crypto';
 import path from 'node:path';
-import { readInput, deny, stripNoise, splitSegments, tokenize, loadState, saveState, HOME } from './lib.mjs';
+import { readInput, deny, stripNoise, splitSegments, tokenize, loadState, saveState, harnessSetting, HOME } from './lib.mjs';
 
 // ------------------------------------------------------------------ vocabulary
 
@@ -250,6 +250,15 @@ for (const seg of segments) {
   if (reason) risky.push({ seg, reason });
 }
 if (!risky.length && /\|\s*(?:sh|bash|zsh|pwsh|powershell|iex)\b/i.test(clean)) risky.push({ seg: clean.slice(0, 140), reason: 'pipes downloaded text straight into a shell' });
+
+// The user also asked (EXPLAIN_SCRIPTS, default yes): multi-line commands, heredocs and inline
+// scripts are explained before they run too — and code changes should go through the Edit/Write
+// tool, so the user can review a diff instead of a script. Plain git add/commit/status are exempt.
+const SCRIPTISH = /\b(?:node(?:\.exe)?\s+(?:-e|--eval|-p|--print)\b|python[0-9.]*(?:\.exe)?\s+(?:-c\b|-\s*(?:<<|$))|(?:bash|sh|zsh)\s+-c\b|(?:powershell|pwsh)(?:\.exe)?\b[^\n]*\s-(?:Command|c)\b)/i;
+const simpleGit = segments.length > 0 && segments.every((seg) => /^git\s+(?:add|commit|status|log|diff|push|pull|fetch|show|branch|switch|stash\s+list)\b/.test(seg));
+const scriptish = String(harnessSetting('EXPLAIN_SCRIPTS', 'yes')).toLowerCase() !== 'no' && !simpleGit &&
+  (clean.includes('\n') || clean.includes('<<heredoc>>') || SCRIPTISH.test(clean));
+if (!risky.length && scriptish) risky.push({ seg: clean.slice(0, 140), reason: 'is a multi-line command or an inline script (heredoc, node -e, python -c, pipes)' });
 if (!risky.length) process.exit(0);
 
 // Loop guard: each distinct command is stopped once per session; the retry goes through.
@@ -269,6 +278,7 @@ deny(
     'translate jargon), and finish with one line: "If you say yes: …".\n\n' +
     `Decoded from the command, as raw material (check it, do not just paste it):\n${breakdown}\n\n` +
     'Then run the SAME command again, unchanged — the second try goes through to the normal approval prompt. ' +
+    (scriptish ? 'For code changes, prefer the Edit or Write tool over an inline script, so the user can review a diff. If you still use a script, also explain the heredoc, pipe and grep parts.\n' : '') +
     'Do not reword or split the command to avoid this check.'
 );
 process.exit(0);
