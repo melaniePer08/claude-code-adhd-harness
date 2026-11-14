@@ -65,7 +65,7 @@ If a value is empty, use the defaults in the example.
 
 1. Start it: `node scripts/owner-form/server.mjs` — as a background process you started yourself. Starting a dev-style server to check work is free (rule 2.2). Port 4173; change with `OWNER_FORM_PORT` only if busy.
 2. Check it:
-   - `node "C:/Users/melan/.claude/tools/shot.mjs" http://localhost:4173 --out ./.shots`, then **read the PNGs**. All images load, nothing scrolls sideways at 390 px, no console errors.
+   - `node ~/.claude/tools/shot.mjs http://localhost:4173 --out ./.shots`, then **read the PNGs**. All images load, nothing scrolls sideways at 390 px, no console errors.
    - Click an option, type in a box, reload: answers survived (look at `docs/owner-answers.json`).
 3. **Delete the test answers** (`docs/owner-answers.json`) and the `.shots` folder afterwards.
 4. Tell the user the URL and the one command to start it:
