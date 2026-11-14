@@ -10,10 +10,11 @@
 </p>
 
 <p align="center">
-  <img alt="Status: work in progress" src="https://img.shields.io/badge/status-work_in_progress-orange">
+  <img alt="Status: first version" src="https://img.shields.io/badge/status-first_version-orange">
   <img alt="For Claude Code" src="https://img.shields.io/badge/for-Claude_Code-D9653B">
   <img alt="12 rule sections" src="https://img.shields.io/badge/rules-12_sections-1F1B16">
-  <img alt="25 skills planned" src="https://img.shields.io/badge/skills-25_planned-5A5248">
+  <img alt="25 skills" src="https://img.shields.io/badge/skills-25-5A5248">
+  <img alt="20 hooks" src="https://img.shields.io/badge/hooks-20-5A5248">
 </p>
 
 ---
@@ -33,6 +34,7 @@ This harness fixes that. Claude **shows a plan and waits for a yes**, works insi
 
 | | |
 |---|---|
+| 🔍 **Explains before you approve** | Risky commands (delete, install, force-push, upload…) are held until Claude explains them part by part. |
 | 🗂️ **Start card** | Plan + time limit + agents in one short card. One yes, then work starts. |
 | 🧠 **Short answers** | Bullets first, details after. Ask once, then wait — no "still waiting…" spam. |
 | 🛡️ **Real security** | Fixes safe problems first, ranks the rest Critical → Low. Never breaks into anything. |
@@ -66,16 +68,38 @@ rules/                one detailed file per topic, read only when needed
   05-tokens · 06-security · 07-secrets · 08-git · 09-code
   10-notifications · 11-learning · 12-question-form
 rules/design-rules.md visual rules, read only for interface work
-skills/               step-by-step routines that load only when used
+skills/               25 step-by-step routines that load only when used
+hooks/                20 automatic checks + a safe installer (see hooks/README.md)
 tools/                screenshot tool + read-only Figma reader (no packages needed)
 STARTER-PACK.md       every hook and skill: what it does, and its status
 RESOURCES.md          good tools by topic — design, security, code, Figma, Claude Code
 DISCLAIMERS.md        please read before installing
 ```
 
+### The 25 skills
+
+| Group | Skills |
+|---|---|
+| **Planning and talking** | `plan-first` · `grill-me` · `owner-form` · `explain-command` · `explain-code` · `write-up` · `first-run-setup` |
+| **Building** | `project-map` · `task-splitter` · `debug` · `verify` · `review-changes` · `merge-manager` · `pre-deploy-check` · `cleanup` |
+| **Security** | `secure-code` · `security-check` · `package-check` |
+| **Design** | `design-research` · `design-system` · `design-review` · `figma-to-code` |
+| **Showing your work** | `project-showcase` · `resources-finder` · `improve-system` |
+
+`review-changes` and `security-check` are named that way so they never clash with Claude Code's built-in `/code-review` and `/security-review`.
+
+### The hooks
+
+Safety: `explain-gate` · `block-dangerous` · `protect-secret-files` · `secret-scan` · `protect-config` · `github-check` · `require-remote`
+Quality: `commit-guard` · `finish-check` · `review-gate` · `auto-format` · `dep-check`
+Computer and cost: `ram-check` · `auto-push`
+Memory and learning: `session-start` · `session-log` · `command-log` · `mistake-log` · `rules-refresh` · `notify`
+
+What each one does, how to install them safely, and their limits: **[hooks/README.md](hooks/README.md)**.
+
 ## Status
 
-This project is being built in the open. Only what's marked ✅ exists today.
+This is a **first version**, built in the open. Everything marked ✅ exists in this repo; first versions are written and checked, but most have not been used for long in real projects yet.
 
 | Part | Status |
 |---|---|
@@ -85,8 +109,8 @@ This project is being built in the open. Only what's marked ✅ exists today.
 | Design rules | ✅ |
 | Skills: all 25 written (first versions) | ✅ |
 | Tools: screenshot tool (`shot.mjs`), Figma reader (`figma.mjs`) | ✅ |
-| `RESOURCES.md` — tables of useful repos by topic | ✅ (weekly auto-refresh 📝 planned) |
-| Hooks (`hooks/` — 19 scripts + a safe installer, `install.mjs`) | ✅ |
+| `RESOURCES.md` — tables of useful repos by topic | ✅ (the weekly auto-refresh is still 📝 planned) |
+| Hooks (`hooks/` — 20 scripts + a safe installer, `install.mjs`) | ✅ |
 | One-step install (`first-run-setup`) | ✅ first version — not yet tested end to end on a clean computer |
 
 <details>
