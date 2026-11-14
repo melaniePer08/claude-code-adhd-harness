@@ -166,6 +166,19 @@
             "statusMessage": "Running the project checks"
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "{{HOOKS_DIR}}/session-log.mjs"
+            ],
+            "timeout": 15
+          }
+        ]
       }
     ],
     "SessionEnd": [

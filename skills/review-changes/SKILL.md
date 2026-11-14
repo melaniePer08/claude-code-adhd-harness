@@ -1,6 +1,6 @@
 ---
 name: review-changes
-description: Review your own changes before a push or a merge — scaled to how much code changed — looking only for real problems (crashes, broken logic, contradictions, unsafe code, UI breakage). Use when the review checkpoint hook fires, before pushing a big feature, before merging, or when asked to "review this". Not the built-in /code-review: this is the light, cheap, harness version.
+description: Review your own changes before a push or a merge — scaled to how much code changed — looking only for real problems (crashes, broken logic, contradictions, unsafe code, UI breakage). Use when the review checkpoint hook fires, before pushing a big feature, before merging, or when asked to "review this". This is the light, cheap harness version, not the built-in /code-review.
 ---
 
 # Review changes

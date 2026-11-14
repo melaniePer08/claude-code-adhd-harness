@@ -27,16 +27,19 @@ const st = loadState(session, 'session');
 const root = st.root || repoRoot(cwd);
 if (!root) process.exit(0);
 
-const commits = st.head && git(root, ['cat-file', '-e', `${st.head}^{commit}`]) !== null
-  ? (git(root, ['log', '--format=- `%h` %s', `${st.head}..HEAD`]) || '').trim()
-  : '';
-const dirty = (statusEntries(root) || []).length;
-if (!commits && !dirty) process.exit(0); // nothing happened worth writing down
-
-// A resumed session ends more than once; log each stretch of commits only once.
+// Incremental diary: every entry lists only the commits made since the previous entry, so this
+// can run at the end of every turn (Stop) as well as at SessionEnd. A terminal that is simply closed
+// never fires SessionEnd, and the diary would stay empty — that is why Stop writes it too.
+const isEnd = input?.hook_event_name === 'SessionEnd';
 const headNow = (git(root, ['rev-parse', 'HEAD']) || '').trim();
 const logged = loadState(session, 'sessionlog');
-if (logged.head === headNow && logged.dirty === dirty) process.exit(0);
+const base = logged.head || st.head;
+const commits = base && git(root, ['cat-file', '-e', `${base}^{commit}`]) !== null
+  ? (git(root, ['log', '--format=- `%h` %s', `${base}..HEAD`]) || '').trim()
+  : '';
+const dirty = (statusEntries(root) || []).length;
+const dirtyChanged = isEnd && dirty && !(logged.head === headNow && logged.dirty === dirty);
+if (!commits && !dirtyChanged) process.exit(0); // nothing new worth writing down
 saveState(session, { head: headNow, dirty }, 'sessionlog');
 
 const started = Number(st.startedAt) || Date.now();
