@@ -83,28 +83,29 @@ This project is being built in the open. Only what's marked ✅ exists today.
 | Settings file | ✅ |
 | Starter pack list (hooks + skills) | ✅ |
 | Design rules | ✅ |
-| Skills: `design-research`, `design-system`, `design-review`, `project-showcase`, `plan-first`, `explain-command`, `owner-form` | ✅ 7 of 25 |
+| Skills: all 25 written (first versions) | ✅ |
 | Tools: screenshot tool (`shot.mjs`), Figma reader (`figma.mjs`) | ✅ |
 | `RESOURCES.md` — tables of useful repos by topic | ✅ (weekly auto-refresh 📝 planned) |
-| Other 18 skills | 📝 planned |
-| Hooks (cleaned for public use) | 📝 planned |
-| One-step install (`first-run-setup`) | 📝 planned |
+| Hooks (`hooks/` — 19 scripts + a safe installer, `install.mjs`) | ✅ |
+| One-step install (`first-run-setup`) | ✅ first version — not yet tested end to end on a clean computer |
 
 <details>
-<summary><b>Install</b> (not ready yet — click for the plan)</summary>
+<summary><b>Install</b> (first version — click for the steps)</summary>
 
 <br>
 
-When it's ready, a setup skill will:
+The `first-run-setup` skill:
 
-1. ask a few questions — your computer's memory, your Claude plan, how pages should look,
-2. check which hooks and skills you already have,
-3. explain each piece, and install only what you say yes to.
+1. asks a few questions — your computer's memory, your Claude plan, how pages should look,
+2. checks which hooks and skills you already have,
+3. explains each piece, and installs only what you say yes to.
+
+Hooks have their own safe installer (`node hooks/install.mjs` — a dry run until you add `--apply`, with a backup of your settings). See `hooks/README.md`.
 
 Everything goes into `~/.claude/harness/` — **not** `~/.claude/rules/`, because Claude Code
 loads that folder automatically in every session, which would cost tokens all the time.
 
-Until then, you can read the rules and copy what you like into your own `CLAUDE.md`.
+This is a first version that has not been tried on a clean computer yet. If you'd rather not run it, read the rules and copy what you like into your own `CLAUDE.md`.
 </details>
 
 <details>
