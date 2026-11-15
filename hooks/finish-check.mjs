@@ -11,6 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
+import { notifyUser } from './toast.mjs';
 import { readInput, out, git, repoRoot, gitBusy, statusEntries, projectDir, readJson, redact, logMistake, NOISE_RE, loadState, saveState, HOME } from './lib.mjs';
 
 const PER_CHECK_MS = 90000;
@@ -157,7 +158,11 @@ if (codeFiles.length) {
     if (res.ok || res.skipped) continue;
     const seen = (st.blocks[check.label] || 0) + 1;
     st.blocks[check.label] = seen;
-    if (seen > MAX_BLOCKS_PER_CHECK) continue; // already raised twice; let the turn end
+    if (seen > MAX_BLOCKS_PER_CHECK) {
+      // Claude could not fix it after two nudges: stop nagging, but tell the user (rule 10.1, 2.8).
+      if (seen === MAX_BLOCKS_PER_CHECK + 1) notifyUser('🔴 Claude stopped trying', `${check.label} is still failing after 2 attempts. Needs you.`, `finish:${check.label}`);
+      continue;
+    }
     const detail = res.timedOut
       ? `timed out after ${Math.round(PER_CHECK_MS / 1000)}s`
       : redact(String(res.text || '')).slice(-1600);

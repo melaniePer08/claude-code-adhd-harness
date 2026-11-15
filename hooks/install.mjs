@@ -78,7 +78,8 @@ for (const [event, groups] of Object.entries(template.hooks)) {
 }
 
 // Files to copy
-const files = [...wanted, 'lib'].map((n) => `${n}.mjs`);
+// lib.mjs and toast.mjs are shared helpers the hooks import, so they always come along.
+const files = [...wanted, 'lib', 'toast'].map((n) => `${n}.mjs`);
 const copyPlan = files.map((f) => {
   const from = path.join(HERE, f);
   const to = path.join(TARGET_DIR, f);
