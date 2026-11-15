@@ -70,7 +70,7 @@ rules/                one detailed file per topic, read only when needed
 rules/design-rules.md visual rules, read only for interface work
 skills/               25 step-by-step routines that load only when used
 hooks/                20 automatic checks + a safe installer (see hooks/README.md)
-tools/                screenshot tool + read-only Figma reader (no packages needed)
+tools/                screenshot tool, read-only Figma reader, RESOURCES.md refresher (no packages needed)
 STARTER-PACK.md       every hook and skill: what it does, and its status
 RESOURCES.md          good tools by topic — design, security, code, Figma, Claude Code
 DISCLAIMERS.md        please read before installing
@@ -112,6 +112,7 @@ This is a **first version**, built in the open. Everything marked ✅ exists in 
 | `RESOURCES.md` — tables of useful repos by topic | ✅ (the weekly auto-refresh is still 📝 planned) |
 | Hooks (`hooks/` — 20 scripts + a safe installer, `install.mjs`) | ✅ |
 | One-step install (`first-run-setup`) | ✅ first version — not yet tested end to end on a clean computer |
+| **Terminal status board** — one coloured tile per open terminal (working / waiting for you / needs you now) with the project's short name, so you can see at a glance which of your 5–6 screens needs you | 📝 planned |
 
 <details>
 <summary><b>Install</b> (first version — click for the steps)</summary>

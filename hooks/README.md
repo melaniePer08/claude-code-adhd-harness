@@ -29,7 +29,7 @@ Requirements: Node.js 18 or newer (`node --version`). Windows pop-ups use PowerS
 | `mistake-log` | prompt submitted | Notices "you did X again" and reminds Claude to log the mistake | 11.1 |
 | `rules-refresh` | after the chat is compressed | Re-states the top rules | core |
 
-`lib.mjs` is the shared helper every hook imports. It is not a hook itself.
+`lib.mjs` (shared helpers) and `toast.mjs` (Windows pop-ups for serious events) are imported by the hooks. They are not hooks themselves — the installer copies them for you.
 
 Hooks that block Claude (`finish-check`, `commit-guard`, `secret-scan`) also write one line to `~/.claude/harness/mistakes-log.md`, so repeated mistakes can become lessons.
 
