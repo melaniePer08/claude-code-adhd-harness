@@ -1,0 +1,12 @@
+# Always use LF line endings, on every operating system.
+# A CRLF at the end of a "#!/usr/bin/env node" line breaks scripts on macOS and Linux,
+# and Windows would otherwise convert every file when it is downloaded.
+* text=auto eol=lf
+
+# Pictures are not text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
