@@ -45,7 +45,8 @@ export function colorFor(state) {
 
 /** Short, readable project name: "appForWriters-main" -> "appForWriters", capped at 16 characters. */
 export function shortName(cwd) {
-  const base = path.basename(String(cwd || '').replace(/[\\/]+$/, '')) || 'terminal';
+  // Folder names are untrusted text that ends up in a terminal: drop control characters (escape sequences).
+  const base = path.basename(String(cwd || '').replace(/[\\/]+$/, '')).replace(/[\x00-\x1f\x7f-\x9f]/g, '') || 'terminal';
   const cleaned = base.replace(/[-_.](main|master|copy|final)$/i, '') || base;
   return cleaned.length > 16 ? `${cleaned.slice(0, 15)}…` : cleaned;
 }
@@ -72,7 +73,7 @@ export function setStatus(sid, state, { cwd, detail = '' } = {}) {
       name: shortName(cwd || prev?.cwd),
       cwd: String(cwd || prev?.cwd || ''),
       state,
-      detail: String(detail).replace(/\s+/g, ' ').slice(0, 120),
+      detail: String(detail).replace(/[\x00-\x1f\x7f-\x9f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 120),
       since: prev && prev.state === state ? prev.since : now,
       updatedAt: now,
     };
