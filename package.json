@@ -1,0 +1,12 @@
+{
+  "name": "claude-code-adhd-harness",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Rules, hooks and skills that keep Claude Code in check. There is nothing to install with npm: this file only gives you `npm test`.",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

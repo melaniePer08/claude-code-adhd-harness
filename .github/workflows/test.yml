@@ -1,0 +1,32 @@
+name: tests
+
+# Runs the whole test suite (plain Node, no packages) on every push and pull request.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    # The harness is built and tested on Windows, so this one must stay green.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test
+
+  linux:
+    # Not yet verified on Linux/macOS: failures here are information, not a blocker.
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test
