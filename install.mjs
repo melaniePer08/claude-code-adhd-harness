@@ -177,5 +177,5 @@ if (hooks.length) {
 }
 
 console.log(APPLY
-  ? `\nDone. Start a new Claude Code session so skills and hooks load (open sessions keep what they loaded). Undo: copy back from ${BACKUPS} and delete what was added.`
+  ? `\nDone. Open Claude Code sessions picked up hooks and skills live in testing; if something does not show up, restart that session. Undo: copy back from ${BACKUPS} and delete what was added.`
   : '\nThis was a preview. Run again with --apply to install.');

@@ -152,4 +152,4 @@ if (toAdd.length || toMigrate.length || wantStatusLine) {
   fs.writeFileSync(tmp, `${JSON.stringify(settings, null, 2)}\n`, 'utf8');
   fs.renameSync(tmp, SETTINGS);
 }
-console.log('\nDone. Start a new Claude Code session so the hooks load. To undo: restore the backup file above and delete the copied scripts.');
+console.log('\nDone. Open sessions pick up hook changes live in testing; if one does not, restart that session. To undo: restore the backup file above and delete the copied scripts.');
