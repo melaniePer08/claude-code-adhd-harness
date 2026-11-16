@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   windows:
-    # The harness is built and tested on Windows, so this one must stay green.
+    # The harness is built and tested on Windows.
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,9 +21,7 @@ jobs:
       - run: node --test
 
   linux:
-    # Not yet verified on Linux/macOS: failures here are information, not a blocker.
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
