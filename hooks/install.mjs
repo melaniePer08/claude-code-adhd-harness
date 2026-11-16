@@ -67,6 +67,16 @@ settings.hooks = settings.hooks || {};
 const registered = (event, script) =>
   (settings.hooks[event] || []).some((g) => (g.hooks || []).some((h) => scriptOf(h) === script && String(h.args || '').includes('.claude/hooks')));
 
+// Migration: older versions registered rules-refresh under PostCompact, which does not accept the
+// output it produces. The updated script is a SessionStart(compact) hook, so the old entry must go,
+// otherwise it would report an error after every compaction. Only that one script is ever removed.
+const toMigrate = [];
+if (wanted.has('rules-refresh')) {
+  for (const g of settings.hooks.PostCompact || []) {
+    for (const h of g.hooks || []) if (scriptOf(h) === 'rules-refresh') toMigrate.push({ group: g, hook: h });
+  }
+}
+
 const toAdd = [];
 for (const [event, groups] of Object.entries(template.hooks)) {
   for (const g of groups) {
@@ -96,6 +106,7 @@ for (const c of copyPlan) console.log(`  ${c.state === 'same' ? '=' : c.state ==
 console.log('\nSettings entries to add:');
 if (!toAdd.length) console.log('  (none — everything chosen is already registered)');
 for (const t of toAdd) console.log(`  + ${t.event}  [${t.entry.matcher || '*'}]  ${t.scripts.join(', ')}`);
+if (toMigrate.length) console.log(`\nOld entries to remove:\n  - PostCompact  rules-refresh   (replaced by the SessionStart "compact" entry above)`);
 
 if (!APPLY) process.exit(0);
 
@@ -106,7 +117,7 @@ for (const c of copyPlan) {
   fs.copyFileSync(c.from, c.to);
 }
 
-if (toAdd.length) {
+if (toAdd.length || toMigrate.length) {
   if (settingsExisted) {
     const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
     fs.copyFileSync(SETTINGS, `${SETTINGS}.bak-${stamp}`);
@@ -117,6 +128,13 @@ if (toAdd.length) {
   for (const t of toAdd) {
     settings.hooks[t.event] = settings.hooks[t.event] || [];
     settings.hooks[t.event].push(t.entry);
+  }
+  for (const { group, hook } of toMigrate) {
+    group.hooks = group.hooks.filter((h) => h !== hook);
+  }
+  if (toMigrate.length) {
+    settings.hooks.PostCompact = (settings.hooks.PostCompact || []).filter((g) => (g.hooks || []).length > 0);
+    if (!settings.hooks.PostCompact.length) delete settings.hooks.PostCompact;
   }
   const tmp = `${SETTINGS}.tmp`;
   fs.writeFileSync(tmp, `${JSON.stringify(settings, null, 2)}\n`, 'utf8');
