@@ -112,7 +112,7 @@ This is a **first version**, built in the open. Everything marked ✅ exists in 
 | Tools: screenshot tool (`shot.mjs`), Figma reader (`figma.mjs`) | ✅ |
 | `RESOURCES.md` — tables of useful repos by topic | ✅ (the weekly auto-refresh is still 📝 planned) |
 | Hooks (`hooks/` — 21 scripts + a safe installer) | ✅ |
-| One-step install (`first-run-setup`) | ✅ first version — not yet tested end to end on a clean computer |
+| One-step install (`install.mjs` + the `first-run-setup` skill) | ✅ installer tested on throwaway home folders; the skill's questions have not been tried on a clean computer |
 | **Terminal status board** — a coloured tile per open terminal (working / needs you / blocked) with the project's short name, plus a coloured status line inside each terminal (`tools/status-board.mjs`, `hooks/status-update.mjs`) | ✅ first version — the tab-title part is experimental |
 | Automated test suite (`node --test`) and a GitHub check on every push | ✅ |
 
@@ -127,7 +127,7 @@ The `first-run-setup` skill:
 2. checks which hooks and skills you already have,
 3. explains each piece, and installs only what you say yes to.
 
-Hooks have their own safe installer (`node hooks/install.mjs` — a dry run until you add `--apply`, with a backup of your settings). See `hooks/README.md`.
+Or do it in one step yourself: `node install.mjs` previews everything (skills, rules, tools, hooks) and changes nothing; add `--apply` to install. Backups go to `~/.claude/backups/`, your settings are backed up and only added to, and nothing is overwritten without a copy. Add `--skills all --hooks all` for everything. See `hooks/README.md`. Run `node --test` to check the harness itself (no packages needed).
 
 Everything goes into `~/.claude/harness/` — **not** `~/.claude/rules/`, because Claude Code
 loads that folder automatically in every session, which would cost tokens all the time.

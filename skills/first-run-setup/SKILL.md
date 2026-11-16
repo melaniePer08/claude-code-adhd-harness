@@ -62,14 +62,21 @@ For each group, **ask for a yes** before doing it (rule 2.3). Explain the comman
 
 ### Doing it
 
-- **Rules, skills, tools**: copy with the system tools. Check each target first — never overwrite an existing file/folder with different content; if one exists, show the difference and ask.
-- **Hooks**: only through the installer, dry run first:
-  ```bash
-  node hooks/install.mjs --only secret-scan,explain-gate,block-dangerous,commit-guard,protect-secret-files        # preview
-  node hooks/install.mjs --only secret-scan,explain-gate,block-dangerous,commit-guard,protect-secret-files --apply  # after the user's yes
-  ```
-  Explain what `--apply` does: copies the scripts into `~/.claude/hooks/`, backs up `settings.json`, **adds** entries (never removes), safe to run twice. If the user's settings already have hooks of their own, say that they stay untouched.
-- Never put anything into `settings.json` yourself with a text edit — the installer does it, with a backup.
+Use the real installer at the root of the harness folder. **Never copy files by hand and never edit `settings.json` with a text edit** — the installer compares every file, backs up anything it would replace, and merges hooks into `settings.json` safely.
+
+1. **Preview first** (changes nothing). Pass the choices the user agreed to:
+   ```bash
+   node install.mjs --skills recommended --hooks recommended          # the recommended set
+   node install.mjs --skills all --hooks all                          # everything
+   node install.mjs --skills secure-code,security-check,package-check,design-research,design-system,design-review,plan-first --hooks none
+   ```
+   Options: `--skills` and `--hooks` take `recommended`, `all`, `none` or a comma list; `--no-rules`, `--no-tools` skip a part; `--home DIR` installs somewhere else (for testing).
+2. Show the user the preview in plain words: how many files are new, how many would replace something (the old copy goes to `~/.claude/backups/<time>/`, never next to the skills), which hooks get registered, and that an existing status line or hooks of theirs are left alone.
+3. After the user's yes, run the same command with `--apply`. Explain it first (`explain-command`): it copies files into `~/.claude/`, backs up `settings.json`, only **adds** hook entries (it removes only an old `rules-refresh` entry that no longer works), and is safe to run twice.
+4. Tell the user to **start a new Claude Code session** — open sessions keep what they loaded.
+5. Check it worked: `node install.mjs ...` again shows "0 new files", and `node --test` (if they cloned the repo) runs the self-checks.
+
+`harness-settings.md` is copied only if it does not exist — the user's values are never overwritten. The user's own `~/.claude/CLAUDE.md` is never touched.
 
 ## Step 4 — Per-project setup (also for every new project)
 

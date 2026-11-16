@@ -25,6 +25,7 @@ Requirements: Node.js 18 or newer (`node --version`). Windows pop-ups use PowerS
 | `auto-format` | after an edit | Runs the project's own formatter, if it has one | 9.2 |
 | `notify` | prompt, notification, stop | Windows pop-up when Claude needs you or finished a long turn | 10 |
 | `command-log`, `session-log` | before a command, session start/end | Logs commands (keys masked) and a plain diary of what changed | 11 |
+| `status-update` | every event | Writes one small status file per terminal (working / needs you / blocked). Feeds the coloured status line and `tools/status-board.mjs` | 10 |
 | `session-start` | session start | Hands Claude `LESSONS.md`, yesterday's log, the weekly reminders | 4.5, 11 |
 | `mistake-log` | prompt submitted | Notices "you did X again" and reminds Claude to log the mistake | 11.1 |
 | `rules-refresh` | after the chat is compressed | Re-states the top rules | core |
@@ -33,9 +34,20 @@ Requirements: Node.js 18 or newer (`node --version`). Windows pop-ups use PowerS
 
 Hooks that block Claude (`finish-check`, `commit-guard`, `secret-scan`) also write one line to `~/.claude/harness/mistakes-log.md`, so repeated mistakes can become lessons.
 
+## See which terminal needs you (status line + board)
+
+If you run several terminals, `status-update` keeps a tiny status file per session, and two things show it:
+
+- **A coloured status line** under the prompt of each terminal, e.g. `● appForWriters · working` or `◐ gameNight · needs you · done — your turn`. It is set up automatically by the installer (only if you do not already have a status line).
+- **The status board:** `node tools/status-board.mjs`, then open http://127.0.0.1:4174 on a spare screen or a pinned tab. One tile per terminal, sorted so the ones that need you come first.
+
+Three states, each with a word and a symbol as well as a colour (so colour alone is never the signal): **● working**, **◐ needs you** (an answer, an approval, or it finished and it is your turn), **■ blocked** (a secret was stopped, a check kept failing, or memory is low). Choose the three colours in `harness-settings.md` (`STATUS_COLOR_WORKING`, `STATUS_COLOR_WAITING`, `STATUS_COLOR_ALERT`; green, yellow, red, blue, magenta, cyan, orange or white).
+
+Limits, honestly: a terminal that is closed without ending its session shows "no signal" after 20 minutes. `STATUS_TERMINAL_TITLE = yes` also tries to put the project name in the tab title, but Claude Code rewrites that title itself, so it is experimental and may not stick.
+
 ## Install
 
-The safe way is the installer. It is a **dry run unless you add `--apply`**:
+The easiest way is the installer at the root of the repo, `node install.mjs` (skills, rules, tools and hooks together; a dry run unless you add `--apply`). To install only hooks, use this folder's own installer. Both are a **dry run unless you add `--apply`**:
 
 ```bash
 node hooks/install.mjs                                   # shows what would change; changes nothing
