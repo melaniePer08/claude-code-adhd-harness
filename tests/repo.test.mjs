@@ -50,7 +50,7 @@ test('no stray control characters (backspace, zero-width) anywhere: they once br
   for (const f of textFiles) {
     const b = fs.readFileSync(path.join(ROOT, f));
     if ([...b].some((c) => c < 32 && c !== 9 && c !== 10 && c !== 13)) bad.push(`${f}: control character`);
-    if (b.includes(Buffer.from('​'))) bad.push(`${f}: zero-width space`);
+    if (b.includes(Buffer.from(String.fromCharCode(0x200b)))) bad.push(`${f}: zero-width space`);
   }
   assert.deepEqual(bad, []);
 });

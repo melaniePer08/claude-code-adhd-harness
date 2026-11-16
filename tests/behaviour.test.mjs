@@ -104,8 +104,10 @@ test('the secret scanner recognises common token formats (fake tokens, built at 
   for (const [name, value] of Object.entries(samples)) {
     assert.ok(lib.scanLine(`token = ${value}`, 'x.txt').length > 0, `${name} token should be detected`);
   }
-  assert.ok(lib.scanLine('{ "type": "service_account", "project_id": "demo" }', 'key.json').length > 0, 'service-account file');
-  assert.ok(lib.scanLine('-----BEGIN RSA PRIVATE KEY-----', 'k.pem').length > 0, 'private key block');
+  const serviceAccount = `{ "type": "${['service', 'account'].join('_')}", "project_id": "demo" }`; // built at run time
+  assert.ok(lib.scanLine(serviceAccount, 'key.json').length > 0, 'service-account file');
+  const pemHeader = ['-----BEGIN RSA ', 'PRIVATE', ' KEY-----'].join(''); // built at run time: no key-looking text in the repo
+  assert.ok(lib.scanLine(pemHeader, 'k.pem').length > 0, 'private key block');
 });
 
 test('the secret scanner leaves ordinary text, placeholders and examples alone', async () => {
