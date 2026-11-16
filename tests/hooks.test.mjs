@@ -63,7 +63,7 @@ test('every hook runs cleanly and prints valid hook JSON', () => {
   }
 });
 
-test('every hook file is covered: each .mjs in hooks/ is a registered hook or a known helper', () => {
+test('every hook file is covered: each .mjs in hooks/ is a registered hook or a known helper', { skip: !fs.existsSync(path.join(HOOKS, 'settings.example.json')) && 'only checked in the repo' }, () => {
   const template = JSON.parse(fs.readFileSync(path.join(HOOKS, 'settings.example.json'), 'utf8'));
   const registered = new Set();
   for (const groups of Object.values(template.hooks)) for (const g of groups) for (const h of g.hooks) registered.add(path.basename(h.args[0], '.mjs'));

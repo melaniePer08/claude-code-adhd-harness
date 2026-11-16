@@ -150,7 +150,18 @@ function gitRisk(t) {
   }
 }
 
-function riskOf(t, raw) {
+// Leading VAR=value words only set a variable for this one command; the real program comes after them.
+const ENV_ASSIGN = /^[A-Za-z_][A-Za-z0-9_]*=/;
+const stripEnv = (t) => {
+  let i = 0;
+  while (i < t.length && ENV_ASSIGN.test(t[i])) i++;
+  return t.slice(i);
+};
+// Redirections (2>&1, > file, >> file, < file) say where output goes; they are not arguments.
+const REDIRECT = /^(?:&>>?|\d*>&\d+|\d*>&-|\d*>>?|\d*<)(.*)$/;
+
+function riskOf(t0, raw) {
+  const t = stripEnv(t0);
   const prog = path.basename(t[0] || '').toLowerCase().replace(/\.(exe|cmd|bat|ps1)$/, '');
   const rest = t.slice(1);
   const lower = rest.map((x) => x.toLowerCase());
@@ -204,19 +215,50 @@ function decodeFlag(tok, prog) {
   return out.filter(([, d]) => d);
 }
 
+function explainRedirect(tok, dest, cwd) {
+  const outside = (p) => {
+    if (!p || !/^(?:~|[A-Za-z]:|\/|\\|\.\.)/.test(p) || p === '/dev/null') return '';
+    const abs = p.startsWith('~') ? path.join(HOME, p.slice(1)) : path.resolve(cwd || HOME, p);
+    const rel = path.relative(cwd || HOME, abs);
+    return rel.startsWith('..') || path.isAbsolute(rel) ? '  ⚠️ outside the project folder' : '';
+  };
+  if (/^\d*>&\d+$/.test(tok)) return `    \`${tok}\` — error messages are merged into the normal output`;
+  if (dest === '/dev/null' || /^nul$/i.test(dest || '')) return `    \`${tok} ${dest}\` — the output is thrown away`;
+  if (/>>$/.test(tok)) return `    \`${tok} ${dest || ''}\` — adds the output to the END of that file${outside(dest)}`;
+  if (/>$/.test(tok)) return `    \`${tok} ${dest || ''}\` — writes the output into that file, REPLACING it if it already exists${outside(dest)}`;
+  if (/<$/.test(tok)) return `    \`${tok} ${dest || ''}\` — reads the input from that file${outside(dest)}`;
+  return `    \`${tok}\` — a redirection`;
+}
+
 function decode(seg, cwd) {
-  const t = tokenize(seg);
-  if (!t.length) return null;
-  const prog = path.basename(t[0]).toLowerCase().replace(/\.(exe|cmd|bat|ps1)$/, '');
+  const all = tokenize(seg);
+  if (!all.length) return null;
   const lines = [`• \`${seg.length > 140 ? `${seg.slice(0, 140)}…` : seg}\``];
+  let start = 0;
+  while (start < all.length && ENV_ASSIGN.test(all[start])) {
+    lines.push(`    sets \`${all[start].split('=')[0]}\` for this one command only`);
+    start++;
+  }
+  const t = all.slice(start);
+  if (!t.length) return lines.join('\n');
+  const prog = path.basename(t[0]).toLowerCase().replace(/\.(exe|cmd|bat|ps1)$/, '');
   lines.push(`    program \`${t[0]}\` — ${PROGRAM[prog] || 'a program (look at --help or the docs if unsure)'}`);
   if (t[1] && /^[a-z][a-z-]*$/i.test(t[1]) && ['git', 'npm', 'pnpm', 'yarn', 'bun', 'pip', 'pip3', 'cargo', 'docker', 'gh', 'winget', 'choco', 'scoop', 'brew', 'apt', 'apt-get'].includes(prog)) {
     lines.push(`    action \`${t[1]}\` — the part that says what it really does (look it up if unsure)`);
   }
   const flagNotes = [];
   const targets = [];
-  for (const tok of t.slice(1)) {
-    if (/^[-/][A-Za-z-]/.test(tok) && !/^\/[A-Za-z0-9_.~-]+\//.test(tok) || tok.startsWith('--')) {
+  const redirects = [];
+  for (let k = 1; k < t.length; k++) {
+    const tok = t[k];
+    const r = REDIRECT.exec(tok);
+    if (r) {
+      let dest = r[1];
+      if (!dest && /^(?:&>>?|\d*>>?|\d*<)$/.test(tok)) dest = t[++k];
+      redirects.push(explainRedirect(tok, dest, cwd));
+      continue;
+    }
+    if ((/^[-/][A-Za-z-]/.test(tok) && !/^\/[A-Za-z0-9_.~-]+\//.test(tok)) || tok.startsWith('--')) {
       for (const [f, d] of decodeFlag(tok, prog)) flagNotes.push(`    ${f} — ${d}`);
     } else if (!/^[a-z]+$/i.test(tok) || tok.includes('/') || tok.includes('.') || tok.includes(path.sep)) {
       targets.push(tok);
@@ -233,6 +275,7 @@ function decode(seg, cwd) {
     if (/^(?:\.|\*)$|^\*/.test(target)) note += '  ⚠️ matches many things';
     lines.push(`    target \`${target}\`${note}`);
   }
+  lines.push(...redirects);
   return lines.join('\n');
 }
 

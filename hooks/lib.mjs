@@ -281,10 +281,43 @@ export function stripNoise(cmd) {
 
 /** Split a command line into separately-executed pieces. */
 export function splitSegments(cmd) {
-  return String(cmd || '')
-    .split(/&&|\|\||[;\n|]/)
-    .map((s) => s.trim())
-    .filter(Boolean);
+  // Quote-aware: a |, ; or && INSIDE quotes (a grep pattern, a message) is text, not a new command.
+  const s = String(cmd || '');
+  const out = [];
+  let cur = '';
+  let quote = null;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (quote) {
+      cur += c;
+      if (c === '\\' && quote === '"' && i + 1 < s.length) cur += s[++i];
+      else if (c === quote) quote = null;
+      continue;
+    }
+    if (c === '\\' && i + 1 < s.length) {
+      cur += c + s[++i];
+      continue;
+    }
+    if (c === '"' || c === "'") {
+      quote = c;
+      cur += c;
+      continue;
+    }
+    if ((c === '&' && s[i + 1] === '&') || (c === '|' && s[i + 1] === '|')) {
+      out.push(cur);
+      cur = '';
+      i++;
+      continue;
+    }
+    if (c === ';' || c === '\n' || c === '|') {
+      out.push(cur);
+      cur = '';
+      continue;
+    }
+    cur += c;
+  }
+  out.push(cur);
+  return out.map((x) => x.trim()).filter(Boolean);
 }
 
 /** Minimal shell-ish tokenizer: keeps quoted paths in one piece. */

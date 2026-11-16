@@ -6,7 +6,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-export const HOOKS = path.join(ROOT, 'hooks');
+// HARNESS_HOOKS_DIR lets the same tests run against an INSTALLED copy (e.g. ~/.claude/hooks) to prove it works.
+export const HOOKS = process.env.HARNESS_HOOKS_DIR ? path.resolve(process.env.HARNESS_HOOKS_DIR) : path.join(ROOT, 'hooks');
 
 /** A fresh throwaway folder. Remove with rm(). */
 export function tmp(prefix = 'cch-test-') {

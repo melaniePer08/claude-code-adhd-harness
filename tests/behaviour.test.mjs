@@ -87,6 +87,35 @@ test('EXPLAIN_SCRIPTS = no turns off the script/heredoc rule but keeps the risky
   }
 });
 
+test('splitSegments is quote-aware: a | ; && inside quotes is text, not a new command', async () => {
+  const lib = await import(path.join(HOOKS, 'lib.mjs').replace(/\\/g, '/').replace(/^([A-Za-z]):/, 'file:///$1:'));
+  assert.deepEqual(lib.splitSegments('grep -E "a|b" file | head'), ['grep -E "a|b" file', 'head']);
+  assert.deepEqual(lib.splitSegments('echo "x && y; z" && ls'), ['echo "x && y; z"', 'ls']);
+  assert.deepEqual(lib.splitSegments("echo 'a | b' || true"), ["echo 'a | b'", 'true']);
+  assert.deepEqual(lib.splitSegments('echo "unterminated | rest'), ['echo "unterminated | rest']);
+  assert.deepEqual(lib.splitSegments('a;b\nc'), ['a', 'b', 'c']);
+});
+
+test('explain-gate sees through env prefixes and quotes, and decodes redirections', () => {
+  const home = tmp();
+  const ask = (command, session) => runHook('explain-gate', { hook_event_name: 'PreToolUse', session_id: session, cwd: process.cwd(), tool_name: 'Bash', tool_input: { command } }, home);
+  try {
+    const prefixed = ask('FOO=1 rm -rf ./dist 2>&1 | tail -3', 'env');
+    const why = prefixed.json?.hookSpecificOutput?.permissionDecisionReason || '';
+    assert.equal(prefixed.json?.hookSpecificOutput?.permissionDecision, 'deny', 'an env prefix must not hide a delete');
+    assert.match(why, /sets `FOO` for this one command only/);
+    assert.match(why, /program `rm`/);
+    assert.match(why, /error messages are merged into the normal output/);
+    assert.ok(!/target `2>&1`/.test(why), '2>&1 is a redirection, not a target');
+    assert.equal(ask('echo "a; rm -rf /" && ls', 'quoted').raw.trim(), '', 'a dangerous-looking string inside quotes is only text');
+    const overwrite = ask('rm -r ./x > ../out.txt', 'redir').json.hookSpecificOutput.permissionDecisionReason;
+    assert.match(overwrite, /REPLACING it/);
+    assert.match(overwrite, /outside the project folder/);
+  } finally {
+    rm(home);
+  }
+});
+
 // ---------------------------------------------------------------- secret scanner
 test('the secret scanner recognises common token formats (fake tokens, built at run time)', async () => {
   const lib = await import(path.join(HOOKS, 'lib.mjs').replace(/\\/g, '/').replace(/^([A-Za-z]):/, 'file:///$1:'));
