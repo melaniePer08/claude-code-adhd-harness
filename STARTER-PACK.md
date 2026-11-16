@@ -25,7 +25,7 @@ Hooks are small scripts Claude Code runs on its own at set moments (before a com
 | `notify` | Windows pop-ups | 10 | ✅ |
 | `command-log` / `session-log` | Logs commands (keys masked) and what changed each session | 11 | ✅ |
 | `rules-refresh` | Re-states the top rules after a long chat is compressed | core | ✅ |
-| `status-board` | A coloured tile per open terminal (e.g. green = working, yellow = waiting for you, red = needs you now; you choose the colours) plus a short project name, so you can see which screen needs you. Planned layers: a status line inside each terminal, a small local page, and best-effort tab title/colour | 10 | 📝 |
+| `status-update` | Keeps one small status file per terminal (working / needs you / blocked) for the status line and the status board; `tools/status-board.mjs` shows one coloured tile per terminal | 10 | ✅ first version |
 | `explain-gate` | Holds a risky command (delete, install, force-push, upload, kill, deploy…) until Claude has explained it part by part, then lets the retry through to your approval prompt | 2.1 | ✅ |
 | `ram-check` | No heavy work under `START_RAM_GB`, stop under `STOP_RAM_GB` | 4.1, 4.2 | ✅ |
 | `session-start` | Reads `LESSONS.md`, weekly reminders, yesterday's summary | 4.5, 11 | ✅ |

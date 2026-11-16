@@ -22,7 +22,7 @@ $id = '{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}' + [char]92 + 'WindowsPowerShell' 
 
 /** Show a pop-up. `key` identifies the event so repeats within 10 minutes are skipped. */
 export function notifyUser(title, message, key = title) {
-  if (process.platform !== 'win32') return false;
+  if (process.platform !== 'win32' || process.env.CC_NO_TOAST) return false; // CC_NO_TOAST: used by the tests
   try {
     const st = loadState('toast', 'events');
     const last = Number(st[key]) || 0;

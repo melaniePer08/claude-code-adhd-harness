@@ -11,6 +11,10 @@ If a value is empty, Claude asks you before the first task (the `first-run-setup
 | `MAX_AGENTS` | 3 | Most helper agents normally suggested for one task |
 | `PUSH_EVERY` | 5 | Push to GitHub automatically after this many unpushed commits (a small `fix:` commit is pushed right away) |
 | `EXPLAIN_SCRIPTS` | yes | Also hold multi-line commands, heredocs and inline scripts (`node -e`, `python -c`) until Claude has explained them, and prefer the Edit tool for code changes. `no` = only risky commands are held |
+| `STATUS_COLOR_WORKING` | green | Status board and status line: colour for "Claude is working". Choose from green, yellow, red, blue, magenta, cyan, orange, white |
+| `STATUS_COLOR_WAITING` | yellow | Colour for "needs you" (an answer, an approval, or it finished and it is your turn) |
+| `STATUS_COLOR_ALERT` | red | Colour for "blocked" (a secret was stopped, checks kept failing, memory is low) |
+| `STATUS_TERMINAL_TITLE` | no | Experimental: also try to put the project name in the terminal tab title. Claude Code rewrites that title itself, so it may not stick |
 | `PLAN_FIRST` | yes | Show the start card and wait for a yes (strongly recommended) |
 | `PACKAGE_WAIT_DAYS` | 7 | Never install a package version newer than this many days |
 | `FORM_AFTER` | 5 | More questions than this → offer the question form |

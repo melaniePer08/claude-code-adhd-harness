@@ -10,6 +10,7 @@
 import os from 'node:os';
 import { spawn } from 'node:child_process';
 import { readInput, out, deny, harnessNumber, loadState, saveState } from './lib.mjs';
+import { setStatus } from './status.mjs';
 
 const GB = 1024 ** 3;
 const START = harnessNumber('START_RAM_GB', 4);
@@ -44,7 +45,7 @@ $x.Item(1).AppendChild($t.CreateTextNode($env:CC_TOAST_MSG)) | Out-Null
 `;
 
 function toast(title, message) {
-  if (process.platform !== 'win32') return;
+  if (process.platform !== 'win32' || process.env.CC_NO_TOAST) return;
   try {
     spawn('powershell.exe', ['-NoProfile', '-NonInteractive', '-WindowStyle', 'Hidden', '-Command', PS], {
       detached: true,
@@ -68,6 +69,7 @@ const freeGb = os.freemem() / GB;
 if (freeGb >= START) process.exit(0);
 
 const free = freeGb.toFixed(1);
+setStatus(input?.session_id, 'alert', { cwd: input?.cwd, detail: `low memory: ${free} GB free` });
 const critical = freeGb < STOP;
 
 if (critical) {

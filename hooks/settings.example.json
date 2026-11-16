@@ -52,6 +52,19 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "{{HOOKS_DIR}}/status-update.mjs"
+            ],
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -123,6 +136,19 @@
             "statusMessage": "Checking dependencies"
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "{{HOOKS_DIR}}/status-update.mjs"
+            ],
+            "timeout": 5
+          }
+        ]
       }
     ],
     "Stop": [
@@ -179,6 +205,19 @@
             "timeout": 15
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "{{HOOKS_DIR}}/status-update.mjs"
+            ],
+            "timeout": 5
+          }
+        ]
       }
     ],
     "SessionEnd": [
@@ -192,6 +231,19 @@
               "{{HOOKS_DIR}}/session-log.mjs"
             ],
             "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "{{HOOKS_DIR}}/status-update.mjs"
+            ],
+            "timeout": 5
           }
         ]
       }
@@ -355,6 +407,19 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "{{HOOKS_DIR}}/status-update.mjs"
+            ],
+            "timeout": 5
+          }
+        ]
       }
     ],
     "Notification": [
@@ -368,6 +433,19 @@
               "{{HOOKS_DIR}}/notify.mjs"
             ],
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "{{HOOKS_DIR}}/status-update.mjs"
+            ],
+            "timeout": 5
           }
         ]
       }

@@ -14,7 +14,7 @@
   <img alt="For Claude Code" src="https://img.shields.io/badge/for-Claude_Code-D9653B">
   <img alt="12 rule sections" src="https://img.shields.io/badge/rules-12_sections-1F1B16">
   <img alt="25 skills" src="https://img.shields.io/badge/skills-25-5A5248">
-  <img alt="20 hooks" src="https://img.shields.io/badge/hooks-20-5A5248">
+  <img alt="21 hooks" src="https://img.shields.io/badge/hooks-21-5A5248">
 </p>
 
 ---
@@ -69,8 +69,8 @@ rules/                one detailed file per topic, read only when needed
   10-notifications · 11-learning · 12-question-form
 rules/design-rules.md visual rules, read only for interface work
 skills/               25 step-by-step routines that load only when used
-hooks/                20 automatic checks + a safe installer (see hooks/README.md)
-tools/                screenshot tool, read-only Figma reader, RESOURCES.md refresher (no packages needed)
+hooks/                21 automatic checks + a safe installer (see hooks/README.md)
+tools/                screenshot tool, Figma reader, RESOURCES.md refresher, terminal status board (no packages needed)
 STARTER-PACK.md       every hook and skill: what it does, and its status
 RESOURCES.md          good tools by topic — design, security, code, Figma, Claude Code
 DISCLAIMERS.md        please read before installing
@@ -94,6 +94,7 @@ Safety: `explain-gate` · `block-dangerous` · `protect-secret-files` · `secret
 Quality: `commit-guard` · `finish-check` · `review-gate` · `auto-format` · `dep-check`
 Computer and cost: `ram-check` · `auto-push`
 Memory and learning: `session-start` · `session-log` · `command-log` · `mistake-log` · `rules-refresh` · `notify`
+Seeing which terminal needs you: `status-update` (feeds the status line and the status board)
 
 What each one does, how to install them safely, and their limits: **[hooks/README.md](hooks/README.md)**.
 
@@ -110,9 +111,10 @@ This is a **first version**, built in the open. Everything marked ✅ exists in 
 | Skills: all 25 written (first versions) | ✅ |
 | Tools: screenshot tool (`shot.mjs`), Figma reader (`figma.mjs`) | ✅ |
 | `RESOURCES.md` — tables of useful repos by topic | ✅ (the weekly auto-refresh is still 📝 planned) |
-| Hooks (`hooks/` — 20 scripts + a safe installer, `install.mjs`) | ✅ |
+| Hooks (`hooks/` — 21 scripts + a safe installer) | ✅ |
 | One-step install (`first-run-setup`) | ✅ first version — not yet tested end to end on a clean computer |
-| **Terminal status board** — one coloured tile per open terminal (working / waiting for you / needs you now) with the project's short name, so you can see at a glance which of your 5–6 screens needs you | 📝 planned |
+| **Terminal status board** — a coloured tile per open terminal (working / needs you / blocked) with the project's short name, plus a coloured status line inside each terminal (`tools/status-board.mjs`, `hooks/status-update.mjs`) | ✅ first version — the tab-title part is experimental |
+| Automated test suite (`node --test`) and a GitHub check on every push | ✅ |
 
 <details>
 <summary><b>Install</b> (first version — click for the steps)</summary>

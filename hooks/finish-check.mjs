@@ -12,6 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { notifyUser } from './toast.mjs';
+import { setStatus } from './status.mjs';
 import { readInput, out, git, repoRoot, gitBusy, statusEntries, projectDir, readJson, redact, logMistake, NOISE_RE, loadState, saveState, HOME } from './lib.mjs';
 
 const PER_CHECK_MS = 90000;
@@ -160,6 +161,7 @@ if (codeFiles.length) {
     st.blocks[check.label] = seen;
     if (seen > MAX_BLOCKS_PER_CHECK) {
       // Claude could not fix it after two nudges: stop nagging, but tell the user (rule 10.1, 2.8).
+      if (seen === MAX_BLOCKS_PER_CHECK + 1) setStatus(input?.session_id, 'alert', { cwd: input?.cwd, detail: `${check.label} still failing` });
       if (seen === MAX_BLOCKS_PER_CHECK + 1) notifyUser('🔴 Claude stopped trying', `${check.label} is still failing after 2 attempts. Needs you.`, `finish:${check.label}`);
       continue;
     }

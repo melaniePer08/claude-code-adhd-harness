@@ -9,6 +9,7 @@
 
 import path from 'node:path';
 import { notifyUser } from './toast.mjs';
+import { setStatus } from './status.mjs';
 import { readInput, deny, out, git, repoRoot, unpushed, scanDiff, scanFile, describeFindings, logMistake, stripNoise, commandCwd, HOME } from './lib.mjs';
 
 const FIX =
@@ -71,6 +72,7 @@ if (input.hook_event_name === 'PreToolUse') {
   if (isPush && findings.length < 25) findings.push(...scanUnpushed(root));
   if (findings.length) {
     logMistake('secret scanner blocked a commit or push that contained a secret', input?.cwd);
+    setStatus(input?.session_id, 'alert', { cwd: input?.cwd, detail: 'a secret was about to be committed' });
     notifyUser('🔴 Secret blocked', 'Something that looks like a key was about to be committed or pushed.', 'secret-block');
     deny(`Blocked: this would put secrets into git.\n${describeFindings(findings)}\n\n${FIX}`);
   }

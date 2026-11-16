@@ -20,6 +20,7 @@ $toast = New-Object Windows.UI.Notifications.ToastNotification $template
 `;
 
 function toast(title, message) {
+  if (process.env.CC_NO_TOAST) return; // used by the tests
   try {
     const child = spawn('powershell.exe', ['-NoProfile', '-NonInteractive', '-WindowStyle', 'Hidden', '-Command', PS], {
       detached: true,

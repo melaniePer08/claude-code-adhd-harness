@@ -60,7 +60,7 @@ const RECOMMENDED_HOOKS = [
 const listDirs = (d) => fs.readdirSync(d, { withFileTypes: true }).filter((e) => e.isDirectory() && !e.name.startsWith('.')).map((e) => e.name);
 const allSkills = listDirs(path.join(HERE, 'skills')).filter((n) => fs.existsSync(path.join(HERE, 'skills', n, 'SKILL.md')));
 const allHooks = fs.readdirSync(path.join(HERE, 'hooks'))
-  .filter((f) => f.endsWith('.mjs') && !['lib.mjs', 'toast.mjs', 'install.mjs'].includes(f) && !f.startsWith('statusline'))
+  .filter((f) => f.endsWith('.mjs') && !['lib.mjs', 'toast.mjs', 'status.mjs', 'install.mjs'].includes(f) && !f.startsWith('statusline'))
   .map((f) => f.replace(/\.mjs$/, ''));
 
 function pick(opt, recommended, all, kind) {

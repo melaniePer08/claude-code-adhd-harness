@@ -77,6 +77,12 @@ if (wanted.has('rules-refresh')) {
   }
 }
 
+// The status line (a coloured project name + state under the prompt) goes with status-update.
+// An existing status line of the user's is never replaced.
+const statusLineCmd = `node "${fwd(path.join(TARGET_DIR, 'statusline.mjs'))}"`;
+const wantStatusLine = wanted.has('status-update') && !settings.statusLine;
+const keptStatusLine = wanted.has('status-update') && !!settings.statusLine && !String(settings.statusLine.command || '').includes('statusline.mjs');
+
 const toAdd = [];
 for (const [event, groups] of Object.entries(template.hooks)) {
   for (const g of groups) {
@@ -89,7 +95,9 @@ for (const [event, groups] of Object.entries(template.hooks)) {
 
 // Files to copy
 // lib.mjs and toast.mjs are shared helpers the hooks import, so they always come along.
-const files = [...wanted, 'lib', 'toast'].map((n) => `${n}.mjs`);
+// status.mjs is imported by finish-check, secret-scan, ram-check and status-update; statusline.mjs is the
+// status-line command that goes with status-update.
+const files = [...wanted, 'lib', 'toast', 'status', ...(wanted.has('status-update') ? ['statusline'] : [])].map((n) => `${n}.mjs`);
 const copyPlan = files.map((f) => {
   const from = path.join(HERE, f);
   const to = path.join(TARGET_DIR, f);
@@ -108,6 +116,9 @@ if (!toAdd.length) console.log('  (none — everything chosen is already registe
 for (const t of toAdd) console.log(`  + ${t.event}  [${t.entry.matcher || '*'}]  ${t.scripts.join(', ')}`);
 if (toMigrate.length) console.log(`\nOld entries to remove:\n  - PostCompact  rules-refresh   (replaced by the SessionStart "compact" entry above)`);
 
+if (wantStatusLine) console.log('\nStatus line to set:\n  + a coloured project name and state under the prompt (statusline.mjs)');
+if (keptStatusLine) console.log('\nStatus line: you already have one, so it is left alone (the status board and hooks still work).');
+
 if (!APPLY) process.exit(0);
 
 fs.mkdirSync(TARGET_DIR, { recursive: true });
@@ -117,7 +128,7 @@ for (const c of copyPlan) {
   fs.copyFileSync(c.from, c.to);
 }
 
-if (toAdd.length || toMigrate.length) {
+if (toAdd.length || toMigrate.length || wantStatusLine) {
   if (settingsExisted) {
     const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
     fs.copyFileSync(SETTINGS, `${SETTINGS}.bak-${stamp}`);
@@ -129,6 +140,7 @@ if (toAdd.length || toMigrate.length) {
     settings.hooks[t.event] = settings.hooks[t.event] || [];
     settings.hooks[t.event].push(t.entry);
   }
+  if (wantStatusLine) settings.statusLine = { type: 'command', command: statusLineCmd };
   for (const { group, hook } of toMigrate) {
     group.hooks = group.hooks.filter((h) => h !== hook);
   }
