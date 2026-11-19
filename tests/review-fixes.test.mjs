@@ -45,7 +45,7 @@ test('block-dangerous asks about commands that destroy work in ways it used to m
     'git restore src/app.js',
     'find . -name "*.log" -delete',
     'find . -exec rm {} +',
-    'bash -c "rm -rf /c/Users/someone/Documents"',
+    'bash -c "rm -rf ~/Documents"',
     'sh -c \'rm -rf ~\'',
     'ls | xargs rm -rf',
   ]) {
