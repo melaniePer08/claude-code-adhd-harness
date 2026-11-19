@@ -12,6 +12,7 @@
 <p align="center">
   <img alt="Status: first version" src="https://img.shields.io/badge/status-first_version-orange">
   <a href="https://github.com/melaniePer08/claude-code-adhd-harness/actions/workflows/test.yml"><img alt="tests" src="https://github.com/melaniePer08/claude-code-adhd-harness/actions/workflows/test.yml/badge.svg"></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue"></a>
   <img alt="For Claude Code" src="https://img.shields.io/badge/for-Claude_Code-D9653B">
   <img alt="12 rule sections" src="https://img.shields.io/badge/rules-12_sections-1F1B16">
   <img alt="25 skills" src="https://img.shields.io/badge/skills-25-5A5248">
@@ -111,11 +112,12 @@ This is a **first version**, built in the open. Everything marked ✅ exists in 
 | Design rules | ✅ |
 | Skills: all 25 written (first versions) | ✅ |
 | Tools: screenshot tool (`shot.mjs`), Figma reader (`figma.mjs`) | ✅ |
-| `RESOURCES.md` — tables of useful repos by topic | ✅ (the weekly auto-refresh is still 📝 planned) |
+| `RESOURCES.md` — tables of useful repos by topic | ✅ refreshed from GitHub by `tools/refresh-resources.mjs` (dry run by default; a monthly reminder asks you to run it) |
 | Hooks (`hooks/` — 21 scripts + a safe installer) | ✅ |
 | One-step install (`install.mjs` + the `first-run-setup` skill) | ✅ installer tested on throwaway home folders; the skill's questions have not been tried on a clean computer |
 | **Terminal status board** — a coloured tile per open terminal (working / needs you / blocked) with the project's short name, plus a coloured status line inside each terminal (`tools/status-board.mjs`, `hooks/status-update.mjs`) | ✅ first version — the tab-title part is experimental |
-| Automated test suite (`node --test`, 79 tests) and a GitHub check on every push — passing on Windows and Linux (macOS not tested) | ✅ |
+| Automated test suite (`node --test`, 85 tests) and a GitHub check on every push — passing on Windows and Linux (macOS not tested) | ✅ |
+| Code review of the hooks (2026-11-19): 4 real gaps found and fixed, each with a regression test | ✅ |
 
 <details>
 <summary><b>Install</b> (first version — click for the steps)</summary>
@@ -146,6 +148,26 @@ This is a first version that has not been tried on a clean computer yet. If you'
 - Anyone on a smaller plan or a normal laptop who can't afford runaway agents.
 - Anyone who prefers to understand the plan before the work starts.
 </details>
+
+## Known limits
+
+Honest list, so you know what the hooks can and cannot do:
+
+- The hooks read the **text of a command**. A determined trick (building a file name in a variable, `cat .e""nv`) can get past them. They catch mistakes, not attackers.
+- If Claude Code sends a hook no input within 2 seconds, the hook lets the call through instead of blocking it (it fails open, so a hook problem never freezes a session).
+- The placeholder check for `.env` files and the secret scanner are pattern-based: an unusual key format they don't know about is not detected.
+- Tested on Windows and Linux. Not tested on macOS, and `first-run-setup` has not been tried on a clean computer.
+- Tab-title and colour control is experimental; the status line and status board are the reliable parts.
+
+## What was hard
+
+- **Hooks that fail safe.** A hook that crashes must never freeze a session, but a security hook that silently stays quiet is useless. Each one is built to do nothing when unsure, and the tests prove it.
+- **Windows and Linux line endings.** The first GitHub checks failed because Windows turned files into CRLF, which breaks a script's first line. A `.gitattributes` file (always LF) fixed it.
+- **Matching words is not matching secrets.** An early version treated any `.env` value *starting* with a word like `my` or `null` as a placeholder, so a real password could go unprotected. A code review found it; it now requires the whole value to be a placeholder, with a test for each case.
+
+## License
+
+MIT, see [LICENSE](LICENSE).
 
 ## Please read
 
