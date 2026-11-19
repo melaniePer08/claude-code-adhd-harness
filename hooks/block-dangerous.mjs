@@ -3,7 +3,7 @@
 // Nothing is blocked outright — the user gets a confirmation prompt and can approve.
 
 import path from 'node:path';
-import { readInput, askUser, stripNoise, splitSegments, tokenize, toWinPath, norm, HOME, isProtectedDir, repoRoot } from './lib.mjs';
+import { readInput, askUser, stripNoise, splitSegments, tokenize, toWinPath, norm, HOME, isProtectedDir, repoRoot, userExplanation } from './lib.mjs';
 
 const RULES = [
   [/\bgit\b[^;&|\n]*\bpush\b[^;&|\n]*(?:--force\b|--force-with-lease\b|\s-[a-zA-Z]*f(?:\s|$)|\s\+\S)/, 'force-push, which overwrites history already on GitHub (a refspec starting with + forces it too)'],
@@ -130,9 +130,6 @@ if (!what) {
 }
 
 if (what) {
-  askUser(
-    `This command would ${what}.\n\n` +
-      `Approve only if that is really what you want. If you are not sure, deny it and ask Claude to explain what the command does first.`
-  );
+  askUser(`⚠️ This command would ${what}.\n\n${userExplanation(cmd, cwd, [what])}`);
 }
 process.exit(0);

@@ -48,12 +48,46 @@ test('explain-gate holds risky commands and multi-line scripts, and lets harmles
   }
 });
 
-test('explain-gate holds a command only once: the retry goes through (loop guard)', () => {
+test('explain-gate holds a command only once; the retry becomes an approval prompt that carries the plain explanation', () => {
   const home = tmp();
   try {
     const input = { hook_event_name: 'PreToolUse', session_id: 'retry', cwd: process.cwd(), tool_name: 'Bash', tool_input: { command: 'rm -rf ./dist' } };
     assert.equal(runHook('explain-gate', input, home).json?.hookSpecificOutput?.permissionDecision, 'deny');
-    assert.equal(runHook('explain-gate', input, home).raw.trim(), '');
+    const second = runHook('explain-gate', input, home).json?.hookSpecificOutput;
+    assert.equal(second?.permissionDecision, 'ask', 'the retry asks the user instead of silently passing');
+    assert.match(second.permissionDecisionReason, /WHAT THIS COMMAND DOES, IN PLAIN WORDS/);
+    assert.match(second.permissionDecisionReason, /deletes files for good/);
+    // a third identical try keeps asking: a risky command is never silently allowed
+    assert.equal(runHook('explain-gate', input, home).json?.hookSpecificOutput?.permissionDecision, 'ask');
+  } finally {
+    rm(home);
+  }
+});
+
+test('the approval prompt explains an install in plain words: the program, the action and every package name', () => {
+  const home = tmp();
+  try {
+    const input = { hook_event_name: 'PreToolUse', session_id: 'inst', cwd: process.cwd(), tool_name: 'Bash', tool_input: { command: 'npm install express lodash' } };
+    runHook('explain-gate', input, home); // first try: Claude is sent back to explain
+    const reason = runHook('explain-gate', input, home).json?.hookSpecificOutput?.permissionDecisionReason || '';
+    assert.match(reason, /program `npm` — the JavaScript package manager/);
+    assert.match(reason, /action `install` — downloads packages from the npm website/);
+    assert.match(reason, /package `express`/);
+    assert.match(reason, /package `lodash`/);
+    assert.match(reason, /ask Claude: "why do you need this/);
+    assert.ok(!/look it up if unsure/.test(reason), 'no "go look it up" for commands the glossary knows');
+  } finally {
+    rm(home);
+  }
+});
+
+test('block-dangerous prompts carry the same plain explanation, not just one sentence', () => {
+  const home = tmp();
+  try {
+    const r = runHook('block-dangerous', { hook_event_name: 'PreToolUse', session_id: 'bd', cwd: process.cwd(), tool_name: 'Bash', tool_input: { command: 'git push --force origin main' } }, home).json?.hookSpecificOutput;
+    assert.equal(r?.permissionDecision, 'ask');
+    assert.match(r.permissionDecisionReason, /WHAT THIS COMMAND DOES, IN PLAIN WORDS/);
+    assert.match(r.permissionDecisionReason, /action `push` — uploads your commits to GitHub/);
   } finally {
     rm(home);
   }
