@@ -203,6 +203,12 @@ const SENSITIVE_FILE =
 function startServer(root) {
   return new Promise((resolve, reject) => {
     const server = http.createServer((req, res) => {
+      // Only this computer, only by its own name: a web page that tricks the browser into talking
+      // to this port under another host name (DNS rebinding) is refused.
+      if (!/^(?:127\.0\.0\.1|localhost):\d+$/i.test(String(req.headers.host || ''))) {
+        res.writeHead(403).end('forbidden host');
+        return;
+      }
       let pathname;
       try {
         pathname = decodeURIComponent(new URL(req.url, 'http://127.0.0.1').pathname);
@@ -221,7 +227,8 @@ function startServer(root) {
       } catch {
         /* fall through to 404 */
       }
-      if (SENSITIVE_FILE.test(path.basename(file))) {
+      // Check every folder name on the way too, not only the file name: /.git/config must not be served.
+      if (path.relative(root, file).split(path.sep).some((part) => SENSITIVE_FILE.test(part))) {
         res.writeHead(403).end('not served');
         return;
       }
