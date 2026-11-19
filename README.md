@@ -36,7 +36,7 @@ This harness fixes that. Claude **shows a plan and waits for a yes**, works insi
 
 | | |
 |---|---|
-| 🔍 **Explains before you approve** | Risky commands (delete, install, force-push, upload…) are held until Claude explains them part by part. |
+| 🔍 **Explains before you approve** | Risky commands (delete, install, force-push, upload…) are held until Claude explains them part by part. The approval prompt itself then spells out, in plain words, what each program, action, flag and package does, so you never have to look it up. |
 | 🗂️ **Start card** | Plan + time limit + agents in one short card. One yes, then work starts. |
 | 🧠 **Short answers** | Bullets first, details after. Ask once, then wait — no "still waiting…" spam. |
 | 🛡️ **Real security** | Fixes safe problems first, ranks the rest Critical → Low. Never breaks into anything. |
@@ -115,8 +115,8 @@ This is a **first version**, built in the open. Everything marked ✅ exists in 
 | `RESOURCES.md` — tables of useful repos by topic | ✅ refreshed from GitHub by `tools/refresh-resources.mjs` (dry run by default; a monthly reminder asks you to run it) |
 | Hooks (`hooks/` — 21 scripts + a safe installer) | ✅ |
 | One-step install (`install.mjs` + the `first-run-setup` skill) | ✅ installer tested on throwaway home folders; the skill's questions have not been tried on a clean computer |
-| **Terminal status board** — a coloured tile per open terminal (working / needs you / blocked) with the project's short name, plus a coloured status line inside each terminal (`tools/status-board.mjs`, `hooks/status-update.mjs`) | ✅ first version — the tab-title part is experimental |
-| Automated test suite (`node --test`, 85 tests) and a GitHub check on every push — passing on Windows and Linux (macOS not tested) | ✅ |
+| **Terminal status board** — a coloured tile per open terminal (working / needs you / blocked) with the project's short name, plus a solid coloured status bar inside each terminal (green working, yellow needs you, red blocked; `STATUS_STYLE = text` for plain coloured text) (`tools/status-board.mjs`, `hooks/status-update.mjs`) | ✅ first version — the tab-title part is experimental |
+| Automated test suite (`node --test`, 89 tests) and a GitHub check on every push — passing on Windows and Linux (macOS not tested) | ✅ |
 | Code review of the hooks (2026-11-19): 4 real gaps found and fixed, each with a regression test | ✅ |
 
 <details>

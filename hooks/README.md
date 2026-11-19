@@ -10,7 +10,7 @@ Requirements: Node.js 18 or newer (`node --version`). Windows pop-ups use PowerS
 
 | Hook | Event | What it does | Rule |
 |---|---|---|---|
-| `explain-gate` | before a shell command | Holds a risky command (delete, install, force-push, upload, kill, deploy…) **once**, with a decoded breakdown, until Claude has explained it part by part. Multi-line commands, heredocs and inline scripts (`node -e`, `python -c`) are held too, with a nudge to use the Edit tool so you can review a diff (`EXPLAIN_SCRIPTS = no` turns that part off). The retry then reaches your normal approval prompt. | 2.1 |
+| `explain-gate` | before a shell command | Holds a risky command (delete, install, force-push, upload, kill, deploy…) **once**, with a decoded breakdown, until Claude has explained it part by part. Multi-line commands, heredocs and inline scripts (`node -e`, `python -c`) are held too, with a nudge to use the Edit tool so you can review a diff (`EXPLAIN_SCRIPTS = no` turns that part off). The retry becomes an approval prompt that already contains a plain-words explanation of every program, action, flag and package (about 50 everyday programs are in its glossary), so it does not depend on Claude having explained well. `block-dangerous` prompts carry the same explanation. | 2.1 |
 | `block-dangerous` | before a shell command | Asks you before force-push, `reset --hard`, recursive deletes outside the project | 2.3, 8.6 |
 | `protect-secret-files` | before read/edit/search | Blocks access to files holding real secrets (`.env`) | 7.4 |
 | `secret-scan` | before and after a shell command | Blocks commits and pushes that contain anything that looks like a key or password | 7.5, 8.7 |
