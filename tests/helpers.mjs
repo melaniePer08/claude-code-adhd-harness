@@ -21,12 +21,17 @@ export const rm = (dir) => fs.rmSync(dir, { recursive: true, force: true });
  */
 export function runHook(script, input, home, env = {}) {
   const file = path.isAbsolute(script) ? script : path.join(HOOKS, `${script}.mjs`);
+  // The tests must not depend on the machine they run on: a NO_COLOR / FORCE_COLOR set by the
+  // caller (a terminal, a CI job, a hook runner) would change what the status line prints.
+  const base = { ...process.env };
+  delete base.NO_COLOR;
+  delete base.FORCE_COLOR;
   const r = spawnSync(process.execPath, [file], {
     input: JSON.stringify(input),
     encoding: 'utf8',
     timeout: 60000,
     windowsHide: true,
-    env: { ...process.env, USERPROFILE: home, HOME: home, CC_NO_TOAST: '1', ...env },
+    env: { ...base, USERPROFILE: home, HOME: home, CC_NO_TOAST: '1', ...env },
   });
   let json = null;
   try {
