@@ -68,3 +68,22 @@ test('block-dangerous stays quiet for safe look-alikes', () => {
     assert.equal(asks(c), false, `should stay quiet: ${c}`);
   }
 });
+
+test('everyday commands are explained in plain words, with no "look it up"', () => {
+  const text = (cmd) => lib.userExplanation(cmd, ROOT, []);
+  const a = text("git log --format='%ae' | sort | uniq -c");
+  assert.match(a, /program `sort` — sorts lines of text/);
+  assert.match(a, /-c — counts how often each line appears/);
+  const b = text('ls LICENSE* 2>&1 | head -2');
+  assert.match(b, /program `head` — shows the first lines of a file/);
+  assert.match(b, /-2 — only 2 lines/);
+  const c = text('grep -rn TODO src');
+  assert.match(c, /-r — searches inside folders too/);
+  assert.match(c, /-n — shows line numbers/);
+  const d = text('sed -n 12,18p notes.md');
+  assert.match(d, /program `sed` — edits or filters text/);
+  assert.match(d, /-n — prints only what the script asks for/);
+  const e = text("node -e 'console.log(1)'");
+  assert.match(e, /-e — runs the following text as JavaScript/);
+  for (const t of [a, b, c, d, e]) assert.ok(!/look at --help or the docs if unsure/.test(t), `unexplained program in:\n${t}`);
+});

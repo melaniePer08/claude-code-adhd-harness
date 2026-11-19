@@ -812,6 +812,60 @@ const PROGRAM = {
   scp: 'copies files to or from another computer over the network',
   rsync: 'copies and syncs files, possibly to another computer',
   ssh: 'runs commands on another computer',
+  // everyday programs (so "look it up" is rare)
+  cat: 'prints the contents of files on screen (read-only)',
+  type: 'prints the contents of a file on screen (read-only)',
+  'get-content': 'reads a file and prints it (read-only)',
+  head: 'shows the first lines of a file (read-only)',
+  tail: 'shows the last lines of a file (read-only)',
+  grep: 'searches text for a pattern and prints the matching lines (read-only)',
+  'select-string': 'searches text for a pattern and prints the matching lines (read-only)',
+  rg: 'fast text search through files (read-only)',
+  sed: 'edits or filters text with a small script; with -i it rewrites the FILE itself',
+  awk: 'filters and reshapes text with a small script',
+  sort: 'sorts lines of text', uniq: 'collapses repeated lines (often with a count)', wc: 'counts lines, words or characters',
+  cut: 'picks columns out of text', tr: 'swaps or deletes characters in text', paste: 'joins lines side by side',
+  tee: 'copies what it receives to the screen AND into a file (replacing the file)',
+  ls: 'lists the files in a folder (read-only)', dir: 'lists the files in a folder (read-only)', 'get-childitem': 'lists the files in a folder (read-only)',
+  pwd: 'prints which folder you are in', cd: 'moves into another folder',
+  echo: 'prints text on screen', which: 'shows where a program is installed', date: 'prints the date and time',
+  find: 'searches for files by name or type; some options (-delete, -exec) change or delete what it finds',
+  diff: 'compares two files line by line (read-only)',
+  mkdir: 'creates a new folder', 'new-item': 'creates a new file or folder', touch: 'creates an empty file, or updates its date',
+  cp: 'copies files, replacing anything with the same name', copy: 'copies files, replacing anything with the same name', 'copy-item': 'copies files, replacing anything with the same name',
+  'set-content': 'writes text into a file, REPLACING what was there', 'out-file': 'writes text into a file, REPLACING what was there',
+  node: 'runs JavaScript on your computer', python: 'runs Python code on your computer', python3: 'runs Python code on your computer',
+  powershell: 'starts Windows PowerShell and runs what follows', pwsh: 'starts PowerShell and runs what follows',
+  bash: 'starts the bash shell and runs what follows', sh: 'starts a shell and runs what follows',
+  tar: 'packs or unpacks archive files', unzip: 'unpacks a zip file into files', zip: 'packs files into a zip file',
+  xargs: 'takes the lines it receives and runs another command on each of them',
+  env: 'shows or sets environment variables for one command', export: 'sets an environment variable for this terminal session',
+  code: 'opens files in Visual Studio Code', start: 'opens a file or program', open: 'opens a file or program',
+  nul: 'the "nowhere" device: anything sent to it is thrown away',
+};
+
+// What a flag means for one specific program (the same letter means different things in different programs).
+const PROG_FLAGS = {
+  head: { n: 'how many lines to show', c: 'how many bytes to show' },
+  tail: { n: 'how many lines to show', f: 'keeps watching the file and prints new lines as they appear' },
+  sed: { n: 'prints only what the script asks for', i: 'edits the file IN PLACE (changes it for real)', e: 'the next text is the editing script', E: 'use extended patterns' },
+  grep: { i: 'ignores capital letters', r: 'searches inside folders too', R: 'searches inside folders too', n: 'shows line numbers', E: 'extended patterns', o: 'prints only the matching part', v: 'prints the lines that do NOT match', l: 'prints only the file names', c: 'prints only a count', w: 'whole words only' },
+  rg: { i: 'ignores capital letters', n: 'shows line numbers', l: 'prints only the file names', c: 'prints only a count', o: 'prints only the matching part' },
+  ls: { l: 'long list with sizes and dates', a: 'includes hidden files', h: 'readable sizes', R: 'goes inside folders too', t: 'newest first' },
+  node: { e: 'runs the following text as JavaScript (an inline script)', p: 'runs the following text as JavaScript and prints the result', c: 'only checks the syntax, does not run' },
+  python: { c: 'runs the following text as Python (an inline script)', m: 'runs a Python module', V: 'prints the version' },
+  python3: { c: 'runs the following text as Python (an inline script)', m: 'runs a Python module' },
+  bash: { c: 'runs the following text as a command' },
+  sh: { c: 'runs the following text as a command' },
+  powershell: { command: 'runs the following text as a command', c: 'runs the following text as a command', noprofile: 'skips the user startup script' },
+  pwsh: { command: 'runs the following text as a command', c: 'runs the following text as a command', noprofile: 'skips the user startup script' },
+  find: { name: 'matches file names', type: 'files (f) or folders (d)', delete: 'DELETES everything it finds', exec: 'runs a command on every match', maxdepth: 'how many folder levels deep to look' },
+  cat: { n: 'numbers the lines' }, wc: { l: 'counts lines', w: 'counts words', c: 'counts bytes' },
+  sort: { r: 'reverses the order', n: 'sorts as numbers', u: 'removes duplicates' }, uniq: { c: 'counts how often each line appears' },
+  tee: { a: 'adds to the end of the file instead of replacing it' },
+  mkdir: { p: 'creates parent folders too, no error if it exists' },
+  cp: { r: 'copies folders too', f: 'replaces existing files without asking' },
+  tar: { x: 'unpacks', c: 'creates an archive', z: 'gzip compression', f: 'the next word is the archive file', v: 'lists each file as it goes' },
 };
 
 const INSTALL_VERBS = new Set(['install', 'i', 'add', 'remove', 'rm', 'uninstall', 'un', 'update', 'upgrade', 'up', 'ci', 'publish', 'link', 'dlx', 'exec']);
@@ -931,14 +985,17 @@ const GIT_FLAGS = { D: 'deletes the branch even if it is not merged', d: 'delete
 
 function decodeFlag(tok, prog) {
   const out = [];
-  const lookup = (ch) => (prog === 'git' && GIT_FLAGS[ch]) || FLAGS[ch] || FLAGS[ch.toLowerCase()];
-  if (tok.startsWith('--')) {
+  const own = PROG_FLAGS[prog] || {};
+  const lookup = (ch) => own[ch] || (prog === 'git' && GIT_FLAGS[ch]) || FLAGS[ch] || FLAGS[ch.toLowerCase()];
+  if (/^-\d+$/.test(tok) && (prog === 'head' || prog === 'tail')) {
+    out.push([tok, `only ${tok.slice(1)} lines`]);
+  } else if (tok.startsWith('--')) {
     const name = tok.slice(2).split('=')[0].toLowerCase();
-    out.push([tok, FLAGS[name]]);
-  } else if (/^-[A-Za-z]{2,}$/.test(tok) && ['rm', 'git', 'curl', 'ls', 'cp', 'mv', 'kill', 'chmod', 'npm'].includes(prog)) {
+    out.push([tok, own[name] || FLAGS[name] || (name === 'version' ? 'prints the version number' : name === 'help' ? 'prints the help text' : null)]);
+  } else if (/^-[A-Za-z]{2,}$/.test(tok) && (['rm', 'git', 'curl', 'ls', 'cp', 'mv', 'kill', 'chmod', 'npm'].includes(prog) || (own && Object.keys(own).every((k) => k.length === 1) && Object.keys(own).length && !own[tok.slice(1)]))) {
     for (const ch of tok.slice(1)) out.push([`-${ch}`, lookup(ch)]);
   } else if (tok.startsWith('-')) {
-    out.push([tok, lookup(tok.slice(1))]);
+    out.push([tok, own[tok.slice(1).toLowerCase()] || lookup(tok.slice(1))]);
   }
   return out.filter(([, d]) => d);
 }
@@ -1083,6 +1140,10 @@ export function decode(seg, cwd) {
   const redirects = [];
   for (let k = 1; k < t.length; k++) {
     const tok = t[k];
+    if (tok === '<<heredoc>>' || tok === '<<heredoc>') {
+      redirects.push('    `<<…` — a block of text typed directly inside the command and fed to the program (its contents are hidden in this summary: read the command itself)');
+      continue;
+    }
     const r = REDIRECT.exec(tok);
     if (r) {
       let dest = r[1];
@@ -1090,7 +1151,7 @@ export function decode(seg, cwd) {
       redirects.push(explainRedirect(tok, dest, cwd));
       continue;
     }
-    if ((/^[-/][A-Za-z-]/.test(tok) && !/^\/[A-Za-z0-9_.~-]+\//.test(tok)) || tok.startsWith('--')) {
+    if ((/^[-/][A-Za-z-]/.test(tok) && !/^\/[A-Za-z0-9_.~-]+\//.test(tok)) || tok.startsWith('--') || (/^-\d+$/.test(tok) && (prog === 'head' || prog === 'tail'))) {
       for (const [f, d] of decodeFlag(tok, prog)) flagNotes.push(`    ${f} — ${d}`);
     } else if (!pkgSet.has(tok) && (!/^[a-z]+$/i.test(tok) || tok.includes('/') || tok.includes('.') || tok.includes(path.sep))) {
       targets.push(tok);
