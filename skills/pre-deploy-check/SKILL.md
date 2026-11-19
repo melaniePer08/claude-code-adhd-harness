@@ -50,6 +50,7 @@ Missing headers on a static site are Medium at most; on an app with logins, High
 - [ ] Only the data actually needed is stored; the user agreed to what's stored.
 - [ ] Not in logs, URLs, error messages, analytics.
 - [ ] There is a way to delete a user's data; a privacy note exists if data is collected.
+- [ ] **If the site or app collects data from the public and is not pure research: offer the `lawyer` skill once** (privacy policy, terms, which US rules apply). It is a recommendation: the user may say no. Record the answer in the report.
 - [ ] No real people's data in the repo or the screenshots.
 
 ## 7. Safety net

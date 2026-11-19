@@ -64,6 +64,7 @@ which would undo the token savings.
 - Write secure code on the first try (`secure-code` skill).
 - Packages: verified only, never a version newer than `PACKAGE_WAIT_DAYS`, ask before installing. (hook)
 - Licences: commercial use allowed? credit needed → `CREDITS.md`.
+- Before launching anything public that collects data: offer the `lawyer` skill once (privacy policy, terms, US rules). Skip for research.
 
 ## 7. Secrets → `rules/07-secrets.md`
 - `.env` = empty values + step-by-step "where to get it" instructions. `.env.example` = same, committed. Never open `.env`.

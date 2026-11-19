@@ -15,7 +15,7 @@
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue"></a>
   <img alt="For Claude Code" src="https://img.shields.io/badge/for-Claude_Code-D9653B">
   <img alt="12 rule sections" src="https://img.shields.io/badge/rules-12_sections-1F1B16">
-  <img alt="25 skills" src="https://img.shields.io/badge/skills-25-5A5248">
+  <img alt="26 skills" src="https://img.shields.io/badge/skills-26-5A5248">
   <img alt="21 hooks" src="https://img.shields.io/badge/hooks-21-5A5248">
 </p>
 
@@ -70,7 +70,7 @@ rules/                one detailed file per topic, read only when needed
   05-tokens · 06-security · 07-secrets · 08-git · 09-code
   10-notifications · 11-learning · 12-question-form
 rules/design-rules.md visual rules, read only for interface work
-skills/               25 step-by-step routines that load only when used
+skills/               26 step-by-step routines that load only when used
 hooks/                21 automatic checks + a safe installer (see hooks/README.md)
 tools/                screenshot tool, Figma reader, RESOURCES.md refresher, terminal status board (no packages needed)
 STARTER-PACK.md       every hook and skill: what it does, and its status
@@ -78,13 +78,13 @@ RESOURCES.md          good tools by topic — design, security, code, Figma, Cla
 DISCLAIMERS.md        please read before installing
 ```
 
-### The 25 skills
+### The 26 skills
 
 | Group | Skills |
 |---|---|
 | **Planning and talking** | `plan-first` · `grill-me` · `owner-form` · `explain-command` · `explain-code` · `write-up` · `first-run-setup` |
 | **Building** | `project-map` · `task-splitter` · `debug` · `verify` · `review-changes` · `merge-manager` · `pre-deploy-check` · `cleanup` |
-| **Security** | `secure-code` · `security-check` · `package-check` |
+| **Security** | `secure-code` · `security-check` · `package-check` · `lawyer` |
 | **Design** | `design-research` · `design-system` · `design-review` · `figma-to-code` |
 | **Showing your work** | `project-showcase` · `resources-finder` · `improve-system` |
 
@@ -110,7 +110,7 @@ This is a **first version**, built in the open. Everything marked ✅ exists in 
 | Settings file | ✅ |
 | Starter pack list (hooks + skills) | ✅ |
 | Design rules | ✅ |
-| Skills: all 25 written (first versions) | ✅ |
+| Skills: all 26 written (first versions) | ✅ |
 | Tools: screenshot tool (`shot.mjs`), Figma reader (`figma.mjs`) | ✅ |
 | `RESOURCES.md` — tables of useful repos by topic | ✅ refreshed from GitHub by `tools/refresh-resources.mjs` (dry run by default; a monthly reminder asks you to run it) |
 | Hooks (`hooks/` — 21 scripts + a safe installer) | ✅ |

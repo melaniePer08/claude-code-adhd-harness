@@ -64,6 +64,7 @@ Skills load only when used, so the core rules stay small.
 | `secure-code` | Safe patterns to follow while writing code | 6.3 | ✅ first version |
 | `security-check` | Checks the real risks, fixes the safe ones with proof, ranks the rest (named so it never clashes with the built-in `/security-review`) | 6.1, 6.2, 6.5 | ✅ first version |
 | `package-check` | Real name, downloads, age ≥ `PACKAGE_WAIT_DAYS`, install scripts, licence + credits | 2.3a, 6.4a, 6.6 | ✅ first version |
+| `lawyer` | Before launch: finds what personal data the app collects, lists which US privacy rules apply and why, writes the privacy policy and terms pages from the real app (a recommendation, skipped for research; not legal advice) | 6, 6.6 | ✅ first version |
 
 ## Design
 | Skill | What it does | Rules | Status |
@@ -80,7 +81,7 @@ Skills load only when used, so the core rules stay small.
 | `resources-finder` | Suggests 1–2 tools from `RESOURCES.md` for the current task | — | ✅ first version |
 | `improve-system` | Keeps `LESSONS.md` (model-aware); weekly finds repeated requests/mistakes and suggests improving existing skills first | 11 | ✅ first version |
 
-**Total: 25 skills.**
+**Total: 26 skills.**
 
 ## Optional extras (suggested, never installed without a yes)
 - **Claude Code `cleanupPeriodDays` setting** — built in; how many days chat transcripts are kept (default 30). Lower it to free disk space.
