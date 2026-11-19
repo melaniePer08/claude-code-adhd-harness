@@ -82,9 +82,11 @@ test('the status line shows symbol, name and words (not colour alone) and honour
     };
     const plain = runHook('statusline', { session_id: 'sl', cwd: 'C:/work/gameNight' }, home, { NO_COLOR: '1' }).raw;
     assert.equal(plain, '● gameNight · working');
-    assert.match(line(), /\x1b\[1;32m/, 'working is green by default');
-    assert.match(line('| `STATUS_COLOR_WORKING` | blue | x |\n'), /\x1b\[1;34m/, 'the chosen colour is used');
-    assert.match(line('| `STATUS_COLOR_WORKING` | notacolour | x |\n'), /\x1b\[1;32m/, 'a misspelt colour falls back to the default');
+    assert.match(line(), /\x1b\[1;30;42m/, 'working is a solid green block by default');
+    assert.match(line('| `STATUS_STYLE` | text | x |\n'), /\x1b\[1;32m/, 'STATUS_STYLE text gives coloured text instead of a block');
+    assert.match(line('| `STATUS_COLOR_WORKING` | blue | x |\n'), /\x1b\[1;97;44m/, 'the chosen colour is used (white text on a blue block)');
+    assert.match(line('| `STATUS_COLOR_WORKING` | notacolour | x |\n'), /\x1b\[1;30;42m/, 'a misspelt colour falls back to the default');
+    assert.match(line(), /WORKING/, 'the words stay in the block, so colour is never the only signal');
     const noSession = runHook('statusline', { session_id: 'unknown', cwd: 'C:/work/other' }, home, { NO_COLOR: '1' }).raw;
     assert.match(noSession, /other/, 'still prints something sensible with no status file');
   } finally {

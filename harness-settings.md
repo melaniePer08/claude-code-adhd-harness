@@ -14,6 +14,7 @@ If a value is empty, Claude asks you before the first task (the `first-run-setup
 | `STATUS_COLOR_WORKING` | green | Status board and status line: colour for "Claude is working". Choose from green, yellow, red, blue, magenta, cyan, orange, white |
 | `STATUS_COLOR_WAITING` | yellow | Colour for "needs you" (an answer, an approval, or it finished and it is your turn) |
 | `STATUS_COLOR_ALERT` | red | Colour for "blocked" (a secret was stopped, checks kept failing, memory is low) |
+| `STATUS_STYLE` | block | Status line look: `block` = a solid coloured bar (green / yellow / red background) that you can see from across the room; `text` = coloured text only |
 | `STATUS_TERMINAL_TITLE` | no | Experimental: also try to put the project name in the terminal tab title. Claude Code rewrites that title itself, so it may not stick |
 | `PLAN_FIRST` | yes | Show the start card and wait for a yes (strongly recommended) |
 | `PACKAGE_WAIT_DAYS` | 7 | Never install a package version newer than this many days |
