@@ -10,7 +10,7 @@ const lib = await import(pathToFileURL(path.join(HOOKS, 'lib.mjs')).href);
 const J = (...p) => p.join('');
 
 test('a real password that merely STARTS like a placeholder word still counts as a real value', () => {
-  for (const v of [J('my', 'password123'), J('My', 'secret!99'), J('null', 'able-Pass9'), J('true', 'Blue2024x'), J('$', 'ecretValue123'), J('example', '-prod-9fX2')]) {
+  for (const v of [J('my', 'password123'), J('My', 'secret!99'), J('null', 'able-Pass9'), J('true', 'Blue2024x'), J('$', 'ecretValue123'), J('example', '-prod-9fX2'), J('env', '.Passw0rd'), J('my-pass', 'word-Abc123')]) {
     assert.equal(lib.dotenvHasRealValue(`${J('DB_PASS', 'WORD')}=${v}`), true, `${v} should be treated as a real value`);
   }
 });

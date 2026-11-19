@@ -374,8 +374,8 @@ const PLACEHOLDER_RE = new RegExp(
     String.raw`\$\([^)]*\)`, // $(command)
     String.raw`\{\{[^}]*\}\}`, // {{ template }}
     String.raw`<[^>]*>`, // <your-key-here>
-    String.raw`(?:process\.env|import\.meta\.env|os\.environ|os\.getenv|env)\b.*`, // reads from the environment
-    String.raw`(?:your|my)[-_ ][\w -]*(?:key|token|secret|password|id|here|value)[\w -]*`, // your_api_key_here
+    String.raw`(?:process\.env|import\.meta\.env|os\.environ|os\.getenv)\b[\w.\[\]'"()]*`, // reads from the environment
+    String.raw`(?:your|my)[-_ ][A-Za-z_ -]*(?:key|token|secret|password|id|here|value)[A-Za-z_ -]*`, // your_api_key_here (letters only, no digits)
     String.raw`x{3,}|\*{3,}|\.{3,}`, // xxxx  ****  ...
     String.raw`sk_(?:live|test)_x+`,
     String.raw`(?:changeme|change-me|change_me|replace-?me|replace|insert|placeholder|example|sample|dummy|fake|none|null|nil|undefined|true|false|todo|tbd)(?:[-_ ](?:key|value|token|secret|password|here|me))*\d*`,
