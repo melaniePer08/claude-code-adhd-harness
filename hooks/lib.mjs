@@ -356,7 +356,7 @@ export const SECRET_PATTERNS = [
   { name: 'Hugging Face token', re: /\bhf_[A-Za-z0-9]{34,}\b/ },
   { name: 'Notion token', re: /\b(?:ntn_[A-Za-z0-9]{30,}|secret_[A-Za-z0-9]{43})\b/ },
   { name: 'Supabase token', re: /\bsbp_[a-f0-9]{40}\b/ },
-  { name: 'OpenAI API key', re: /\bsk-(?:proj-|svcacct-)?[A-Za-z0-9]{32,}/ },
+  { name: 'OpenAI API key', re: /\bsk-(?:proj-|svcacct-|admin-)?[A-Za-z0-9_-]{32,}/ },
   { name: 'Google API key', re: /\bAIza[0-9A-Za-z_-]{35}\b/ },
   { name: 'Slack token', re: /\bxox[abopsr]-[A-Za-z0-9-]{12,}/ },
   { name: 'SendGrid API key', re: /\bSG\.[A-Za-z0-9_-]{16,}\.[A-Za-z0-9_-]{16,}/ },
@@ -366,8 +366,32 @@ export const SECRET_PATTERNS = [
 
 const SECRET_NAME_RE = /SECRET|PASSWORD|PASSWD|API_?KEY|APIKEY|PRIVATE_?KEY|ACCESS_?KEY|CLIENT_?SECRET|AUTH_?TOKEN|ACCESS_?TOKEN|CREDENTIAL/i;  // secret-scan: allow (a pattern, not a value)
 
-const PLACEHOLDER_RE =
-  /^(?:\$|\{|<|\(|process\.env|import\.meta|os\.environ|env\[|your[-_ ]?|my[-_ ]?|x{3,}|\*{3,}|\.{3,}|change[-_ ]?me|placeholder|example|sample|dummy|fake|test[-_ ]?(?:key|value)|replace|insert|todo|tbd|none|null|nil|undefined|true|false|localhost|https?:\/\/(?:localhost|127\.)|sk_test_xxx)/i;
+// A value counts as a placeholder only when the WHOLE value is one. Matching just the start
+// (the old rule) let real passwords like "mypassword123" or "nullable-Pass9" through unprotected.
+const PLACEHOLDER_RE = new RegExp(
+  [
+    String.raw`\$\{[^}]*\}`, // ${VAR}
+    String.raw`\$\([^)]*\)`, // $(command)
+    String.raw`\{\{[^}]*\}\}`, // {{ template }}
+    String.raw`<[^>]*>`, // <your-key-here>
+    String.raw`(?:process\.env|import\.meta\.env|os\.environ|os\.getenv|env)\b.*`, // reads from the environment
+    String.raw`(?:your|my)[-_ ][\w -]*(?:key|token|secret|password|id|here|value)[\w -]*`, // your_api_key_here
+    String.raw`x{3,}|\*{3,}|\.{3,}`, // xxxx  ****  ...
+    String.raw`sk_(?:live|test)_x+`,
+    String.raw`(?:changeme|change-me|change_me|replace-?me|replace|insert|placeholder|example|sample|dummy|fake|none|null|nil|undefined|true|false|todo|tbd)(?:[-_ ](?:key|value|token|secret|password|here|me))*\d*`,
+    String.raw`test[-_ ]?(?:key|value)\d*`,
+    String.raw`localhost(?::\d+)?`,
+    String.raw`https?:\/\/(?:localhost|127\.).*`,
+  ]
+    .map((p) => `(?:${p})`)
+    .join('|')
+    .replace(/^/, '^(?:')
+    .concat(')$'),
+  'i'
+);
+// $VAR must be ALL CAPS to count (case-sensitive), so a password like "$ecretValue123" is not mistaken for one.
+const ENV_VAR_RE = /^\$[A-Z_][A-Z0-9_]*$/;
+const isPlaceholder = (v) => PLACEHOLDER_RE.test(v) || ENV_VAR_RE.test(v);
 
 const LOCKFILE_RE = /(?:^|[/\\])(?:package-lock\.json|yarn\.lock|pnpm-lock\.yaml|poetry\.lock|Cargo\.lock|composer\.lock|Gemfile\.lock|go\.sum)$/i;
 
@@ -427,7 +451,7 @@ export function scanLine(text, file = '') {
     const [, name, , value] = m;
     if (name !== name.toUpperCase()) continue; // CONSTANT_CASE only, keeps false positives down
     if (!SECRET_NAME_RE.test(name)) continue;
-    if (PLACEHOLDER_RE.test(value)) continue;
+    if (isPlaceholder(value)) continue;
     if (!/[0-9]/.test(value) && !/[a-z]/.test(value)) continue;
     findings.push({ rule: `hard-coded value for ${name}`, file, snippet: mask(line, value) });
     break;
@@ -504,7 +528,7 @@ export function dotenvHasRealValue(text) {
     if (q) v = q[2];
     else v = v.replace(/\s+#.*$/, '').trim();
     if (!v) continue;
-    if (PLACEHOLDER_RE.test(v)) continue;
+    if (isPlaceholder(v)) continue;
     return true;
   }
   return false;
