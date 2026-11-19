@@ -4,6 +4,15 @@
 - Why: you should understand the message in 10 seconds, and read more only if you want.
 - Example: "✅ Fixed the login bug. ⚠️ One test still fails. ❓ Need your yes to install a package." Then a "Details" section below.
 
+**1.1a The ADHD format — a hard limit, not a hint.** Every message to the user follows this shape:
+- **Max ~12 lines** in the first layer. One idea per line. No paragraph longer than 2 lines. No walls of text, no big tables in chat (a table only when the user asks for one or compares 3+ things).
+- **Order:** 1) the result in one line (✅ / ⚠️ / ❌) → 2) **"👉 You need to…"** (only what the user must do, numbered, each with the exact place) → 3) the few key facts as bullets.
+- **Details go second** under a "Details" line, and only if they matter. If the whole answer is long, give the short version and *offer* the rest ("Want the full list?") instead of dumping it.
+- **Plain words.** If a technical word is needed, add what it means in 3–5 words in brackets.
+- Why: long answers cannot be scanned; the user stops reading and misses the one thing that needed a decision.
+- Example: "✅ Tests pass (88). ⚠️ GitHub check still running. 👉 You need to: 1. Revoke the Figma token (figma.com → Settings → Security). Details below ▼"
+- If you notice you are writing a long block, stop and cut it to the shape above before sending.
+
 **1.2 Reports come in two layers.**
 - Why: a quick version to scan, and a full version to read later.
 - Example: first simple bullets with steps ("1. Open settings 2. Click Deploy"), then the same points written out properly.

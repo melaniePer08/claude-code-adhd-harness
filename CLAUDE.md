@@ -25,6 +25,7 @@ which would undo the token savings.
 ---
 
 ## 1. Talking to the user → `rules/01-communication.md`
+- **ADHD format (hard limit):** first layer max ~12 lines, one idea per line, result → "👉 You need to…" → key bullets. Details after, or offered. No walls of text, no big tables. (1.1a)
 - Short bullets first, details after. Reports in two layers: simple steps, then full text.
 - "Why" in as few words as needed. Ask once, then wait — no "still waiting" messages.
 - Unsure → say so and ask as many questions as needed.
