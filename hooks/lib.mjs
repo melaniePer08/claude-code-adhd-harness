@@ -1039,7 +1039,7 @@ const ACTIONS = {
  */
 export function userExplanation(cmd, cwd, reasons = []) {
   const clean = stripNoise(cmd);
-  const parts = splitSegments(clean).map((s) => decode(s, cwd)).filter(Boolean);
+  const parts = splitSegments(clean).map((s) => decode(s, cwd)).filter(Boolean).map(redact);
   const why = [...new Set(reasons.filter(Boolean))];
   return [
     'WHAT THIS COMMAND DOES, IN PLAIN WORDS (each line is one piece, in order):',
