@@ -17,6 +17,13 @@ The default audience is **the United States**. Ask once if users are also elsewh
 - Offer it after the app is finished and before launch (it pairs with `pre-deploy-check`).
 - **Do not offer it** for pure research, learning exercises, scripts, or a project that stays on the user's own computer and collects nothing from other people. Say in one line why you skipped it.
 
+### Two moments to run it
+
+- **At the start of a project** (short version): do Step 1 only, so the data plan is decided before the code exists. Note anything that would need a privacy policy later.
+- **Before launch** (full version): all steps, including the pages.
+
+If the user has pasted the "legal-privacy" prompt from `PROMPTS.md`, they have already said yes: skip the offer and run it.
+
 ### The offer (ask exactly once, short)
 
 > 🧑‍⚖️ Before you launch: I have a skill called **lawyer**. It checks what personal information your app collects and stores, tells you which US privacy rules apply and why, and writes your privacy policy and terms pages from what the app really does. Want it? (Skip it for research or private projects.)
@@ -41,6 +48,14 @@ Then fill **one table** (this is the core of the whole check):
 
 | Data | Where it is collected | Where it is stored | Who else gets it | Why it is needed | How long kept |
 |---|---|---|---|---|---|
+
+For each row, name **where it really goes**: browser storage, the database, an AI service, analytics, email, logs, or another company's server.
+
+Then check the **privacy settings the code actually has** (✅ exists / ❌ missing), each with the file that proves it:
+- **Delete:** can a user delete their account and data?
+- **Export:** can a user get a copy of their data?
+- **Consent:** is the user asked before data is collected or tracking starts, and can they say no?
+- **Logging:** what do the logs hold (IP addresses, emails, message text)? Are they kept forever?
 
 Mark anything that is collected but **not needed**. Suggest removing it: the safest data is data you never collect.
 
@@ -99,6 +114,7 @@ Keep the pages short and in plain English: people actually read them, and short 
 
 ## Never
 
+- Never promise anything in a policy that the code does not do (no "you can delete your data" unless the delete path exists).
 - Never invent a company name, address, registration number, or law that does not exist.
 - Never say the app "complies" with a law. Say "covers the usual requirements for…".
 - Never put the user's personal email or address into a public page without asking.

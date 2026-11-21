@@ -74,6 +74,7 @@ skills/               26 step-by-step routines that load only when used
 hooks/                21 automatic checks + a safe installer (see hooks/README.md)
 tools/                screenshot tool, Figma reader, RESOURCES.md refresher, terminal status board (no packages needed)
 STARTER-PACK.md       every hook and skill: what it does, and its status
+PROMPTS.md            two ready-to-paste prompts (project start, and the lawyer skill)
 RESOURCES.md          good tools by topic — design, security, code, Figma, Claude Code
 DISCLAIMERS.md        please read before installing
 ```
