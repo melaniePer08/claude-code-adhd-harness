@@ -1,11 +1,11 @@
 # Two prompts to paste
 
-Copy-paste prompts that use the harness. Both rely on the `lawyer` skill (`skills/lawyer/`).
+Copy-paste prompts that use the harness. Prompt 1 is the `project-start` skill (`skills/project-start/`). Prompt 2 is the `lawyer` skill (`skills/lawyer/`). If a skill is missing on a machine, the prompt says to create it first.
 
 ## Prompt 1 — paste at the start of every project (short)
 
 ```
-Before you start: check git remote, read CLAUDE.md, and run the lawyer skill (start-of-project version).
+Run the project-start skill: check git remote, read CLAUDE.md, and run the lawyer skill (start-of-project version).
 If the skill doesn't exist on this machine, create it first (ask me to approve).
 Then work in short steps. After each step: tests, lint, a security check, one commit.
 Keep the report to short bullets with a TL;DR on top.

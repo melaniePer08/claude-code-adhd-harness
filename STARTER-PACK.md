@@ -40,6 +40,7 @@ Skills load only when used, so the core rules stay small.
 |---|---|---|---|
 | `first-run-setup` | Asks your settings (incl. how the form and summary pages should look), sets up git + `.env` files for a project, installs only the hooks and skills you need | settings, 7, 8.1 | ✅ first version |
 | `plan-first` | Writes the start card: plan + time + agents/models, one yes | 2.4 | ✅ first version |
+| `project-start` | The first-minutes routine: GitHub check, read CLAUDE.md, run `lawyer`, short steps with tests + lint + security + one commit each, report with TL;DR and a separate "you must do" list | 1.1a, 8, 9.5 | ✅ first version |
 | `grill-me` | Asks you questions before a big build so it's right the first time (inspired by [`grill-me`](https://github.com/mattpocock/skills) by Matt Pocock, MIT licence — credited) | 5.4 | ✅ first version |
 | `owner-form` | Builds the local question form | 1.8, 12 | ✅ first version |
 | `explain-command` | Explains a command part by part before you approve it | 2.1 | ✅ first version |
@@ -81,7 +82,7 @@ Skills load only when used, so the core rules stay small.
 | `resources-finder` | Suggests 1–2 tools from `RESOURCES.md` for the current task | — | ✅ first version |
 | `improve-system` | Keeps `LESSONS.md` (model-aware); weekly finds repeated requests/mistakes and suggests improving existing skills first | 11 | ✅ first version |
 
-**Total: 26 skills.**
+**Total: 27 skills.**
 
 ## Optional extras (suggested, never installed without a yes)
 - **Claude Code `cleanupPeriodDays` setting** — built in; how many days chat transcripts are kept (default 30). Lower it to free disk space.

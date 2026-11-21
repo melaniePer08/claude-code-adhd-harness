@@ -78,8 +78,8 @@ for (const f of fs.readdirSync(path.join(ROOT, 'rules'))) {
   for (const m of fs.readFileSync(path.join(ROOT, 'rules', f), 'utf8').matchAll(/^\*\*(\d{1,2}\.\d{1,2}[a-z]?)[ .]/gm)) ruleIds.add(m[1]);
 }
 
-test('there are 26 skills, as the README says', () => {
-  assert.equal(skillNames.length, 26);
+test('there are 27 skills, as the README says', () => {
+  assert.equal(skillNames.length, 27);
 });
 
 for (const name of skillNames) {
